@@ -1,0 +1,37 @@
+name: ci
+on: [push, pull_request]
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with: { python-version: "3.12" }
+      - name: Install
+        run: |
+          pip install -e packages/florence-core -e packages/florence-edena \
+                      -e packages/florence-connectors -e packages/florence-model-router \
+                      -e packages/florence-cli
+          pip install ".[api,dev]"
+      - name: Lint
+        run: ruff check .
+      - name: Tests
+        run: pytest -q
+      - name: Schema drift check
+        run: |
+          python - <<'PY'
+          import json
+          from florence_core.schemas import CandidateAction, EDENADecision
+          for n, m in [("candidate_action", CandidateAction), ("edena_decision", EDENADecision)]:
+              assert json.load(open(f"schemas/{n}.schema.json")) == m.model_json_schema(), f"drift: {n}"
+          print("no schema drift")
+          PY
+  opa:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: open-policy-agent/setup-opa@v2
+      - name: OPA check + test
+        run: |
+          opa check policies
+          opa test policies -v

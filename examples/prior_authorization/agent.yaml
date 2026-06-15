@@ -1,0 +1,21 @@
+agent_id: prior_auth_drafter
+name: Prior Authorization Drafter
+version: "1.0.0"
+purpose: Gather FHIR-based clinical evidence and draft a prior authorization request; external submission to a payer portal is a separate Orange, human-gated action.
+owner_role: rn
+institutional_approval_ref: "NAIO-APPROVAL-2026-005"
+allowed_tasks: [gather_clinical_evidence, draft_prior_auth_request, attach_source_citations, prepare_external_submission]
+prohibited_tasks: [submit_without_human_approval, write_ehr_note, place_order, send_patient_message, alter_clinical_evidence]
+allowed_tools: [fhir_read_patient_summary, local_policy_search, prior_auth_template_renderer, payer_portal_submitter]
+memory:
+  write_allowed: false
+  read_allowed: true
+  allowed_memory_classes: [operational_context]
+model_route:
+  default: local_clinical_slm
+  escalation: approved_cloud_model_redacted_only
+  phi_rule: never_external_with_phi
+edena_baseline_tier: yellow
+evaluation_rubric: prior_auth_quality_v1
+fallback_behavior: return_incomplete_with_missing_flags
+decommission_path: NAIO-DECOMMISSION-PROCESS

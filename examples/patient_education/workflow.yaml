@@ -1,0 +1,17 @@
+workflow_id: patient_education_draft
+name: Patient Education Draft
+version: "1.0.0"
+description: Draft discharge / education content from approved context.
+signal_types: [patient_education_needed, discharge_education_needed]
+baseline_tier: yellow      # Red when high-risk diagnosis or external delivery
+owner_role: rn
+steps:
+  - step_id: draft
+    name: Draft education content (reading-level + source refs)
+    agent_id: patient_education_drafter
+    produces_action: true
+    next_steps: [human_review]
+  - step_id: human_review
+    name: Clinician reviews and approves before any delivery
+    produces_action: false
+    next_steps: []

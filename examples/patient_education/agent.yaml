@@ -1,0 +1,21 @@
+agent_id: patient_education_drafter
+name: Patient Education Drafter
+version: "1.0.0"
+purpose: Draft patient-facing discharge and education content at an appropriate reading level from approved local context, with source citations and no delivery.
+owner_role: rn
+institutional_approval_ref: "NAIO-APPROVAL-2026-002"
+allowed_tasks: [draft_education_content, assess_reading_level, attach_source_citations, flag_high_risk_diagnosis]
+prohibited_tasks: [send_patient_message, deliver_external, write_ehr_note, place_order, give_clinical_advice_unbounded]
+allowed_tools: [fhir_read_patient_summary, local_policy_search, reading_level_analyzer, education_template_renderer]
+memory:
+  write_allowed: false
+  read_allowed: true
+  allowed_memory_classes: [operational_context]
+model_route:
+  default: local_clinical_slm
+  escalation: approved_cloud_model_redacted_only
+  phi_rule: never_external_with_phi
+edena_baseline_tier: yellow
+evaluation_rubric: patient_education_quality_v1
+fallback_behavior: return_incomplete_with_missing_flags
+decommission_path: NAIO-DECOMMISSION-PROCESS

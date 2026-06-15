@@ -1,0 +1,14 @@
+workflow_id: policy_protocol_retrieval
+name: Policy & Protocol Retrieval
+version: "1.0.0"
+description: Retrieve local policy, summarize, cite source sections. Green/Yellow.
+signal_types: [policy_question]
+baseline_tier: green
+owner_role: rn
+steps:
+  - step_id: retrieve
+    name: Retrieve + summarize policy with citations
+    agent_id: policy_retriever
+    produces_action: true        # retrieve/summarize -> allow_with_constraints (must cite)
+    next_steps: []
+# Action rule: must cite policy source, version, and date; no extrapolation.

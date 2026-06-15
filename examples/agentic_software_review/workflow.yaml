@@ -1,0 +1,17 @@
+workflow_id: agentic_software_safety_review
+name: Agentic Software Safety Review (EDENA-AS)
+version: "1.0.0"
+description: Inspect AI-generated code for secrets, PHI movement, unsafe tool use, scope.
+signal_types: [code_review_needed]
+baseline_tier: orange         # when code can affect production systems
+owner_role: technical_steward
+steps:
+  - step_id: inspect
+    name: Static inspection (secrets, PHI egress, permission scope, blast radius)
+    agent_id: code_safety_reviewer
+    produces_action: true       # never executes; emits review findings
+    next_steps: [human_review]
+  - step_id: human_review
+    name: Senior + technical steward review; no execution without dual approval
+    produces_action: false
+    next_steps: []

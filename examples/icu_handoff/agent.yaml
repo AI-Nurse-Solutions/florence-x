@@ -1,0 +1,21 @@
+agent_id: icu_handoff_synthesizer
+name: ICU Handoff Synthesizer
+version: "1.0.0"
+purpose: Draft structured ICU handoff summaries from approved local FHIR context.
+owner_role: charge_rn
+institutional_approval_ref: "NAIO-APPROVAL-2026-001"
+allowed_tasks: [synthesize_handoff_draft, retrieve_patient_summary, identify_missing_data_flags]
+prohibited_tasks: [send_patient_message, write_ehr_note, place_order, access_billing_data]
+allowed_tools: [fhir_read_patient_summary, local_policy_search, handoff_template_renderer]
+memory:
+  write_allowed: false
+  read_allowed: true
+  allowed_memory_classes: [operational_context]
+model_route:
+  default: local_clinical_slm
+  escalation: approved_cloud_model_redacted_only
+  phi_rule: never_external_with_phi
+edena_baseline_tier: yellow
+evaluation_rubric: handoff_quality_v1
+fallback_behavior: return_incomplete_with_missing_flags
+decommission_path: NAIO-DECOMMISSION-PROCESS

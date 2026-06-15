@@ -1,0 +1,21 @@
+agent_id: code_safety_reviewer
+name: Agentic Software Safety Reviewer
+version: "1.0.0"
+purpose: Statically inspect AI-generated code for secrets, PHI egress, unsafe tool use, permission scope, and blast radius; emit review findings only and never execute code.
+owner_role: technical_steward
+institutional_approval_ref: "NAIO-APPROVAL-2026-004"
+allowed_tasks: [scan_for_secrets, detect_phi_egress, assess_permission_scope, estimate_blast_radius, emit_review_findings]
+prohibited_tasks: [execute_code, deploy_code, modify_repository, place_order, write_ehr_note, send_patient_message]
+allowed_tools: [static_code_scanner, secret_detector, phi_egress_detector, dependency_inspector]
+memory:
+  write_allowed: false
+  read_allowed: true
+  allowed_memory_classes: [operational_context]
+model_route:
+  default: local_code_review_slm
+  escalation: approved_cloud_model_redacted_only
+  phi_rule: never_external_with_phi
+edena_baseline_tier: orange
+evaluation_rubric: code_safety_review_v1
+fallback_behavior: return_incomplete_with_missing_flags
+decommission_path: NAIO-DECOMMISSION-PROCESS

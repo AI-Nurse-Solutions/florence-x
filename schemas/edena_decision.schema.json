@@ -1,0 +1,117 @@
+{
+  "$defs": {
+    "EdenaDecisionType": {
+      "description": "The eight governance outcomes EDENA may return.",
+      "enum": [
+        "allow",
+        "allow_with_constraints",
+        "require_human",
+        "escalate",
+        "deny",
+        "throttle",
+        "contain",
+        "stop"
+      ],
+      "title": "EdenaDecisionType",
+      "type": "string"
+    },
+    "RiskTier": {
+      "description": "EDENA action-risk tiers. Ambiguity always escalates upward.",
+      "enum": [
+        "green",
+        "yellow",
+        "orange",
+        "red",
+        "red_blocked"
+      ],
+      "title": "RiskTier",
+      "type": "string"
+    }
+  },
+  "additionalProperties": false,
+  "properties": {
+    "decision_id": {
+      "title": "Decision Id",
+      "type": "string"
+    },
+    "action_id": {
+      "title": "Action Id",
+      "type": "string"
+    },
+    "decision": {
+      "$ref": "#/$defs/EdenaDecisionType"
+    },
+    "risk_tier": {
+      "$ref": "#/$defs/RiskTier"
+    },
+    "required_human_role": {
+      "anyOf": [
+        {
+          "type": "string"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "title": "Required Human Role"
+    },
+    "constraints": {
+      "items": {
+        "type": "string"
+      },
+      "title": "Constraints",
+      "type": "array"
+    },
+    "rationale": {
+      "title": "Rationale",
+      "type": "string"
+    },
+    "evidence_required": {
+      "items": {
+        "type": "string"
+      },
+      "title": "Evidence Required",
+      "type": "array"
+    },
+    "policy_pack_version": {
+      "anyOf": [
+        {
+          "type": "string"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "title": "Policy Pack Version"
+    },
+    "decided_at": {
+      "format": "date-time",
+      "title": "Decided At",
+      "type": "string"
+    },
+    "expires_at": {
+      "anyOf": [
+        {
+          "format": "date-time",
+          "type": "string"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "title": "Expires At"
+    }
+  },
+  "required": [
+    "decision_id",
+    "action_id",
+    "decision",
+    "risk_tier",
+    "rationale"
+  ],
+  "title": "EDENADecision",
+  "type": "object"
+}

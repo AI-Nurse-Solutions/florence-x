@@ -1,0 +1,67 @@
+# Florence-X local development stack (Phase 1 MVP).
+# `docker compose -f docker/docker-compose.yml up` brings up Postgres, Redis,
+# OPA (EDENA policy engine), and the Florence-X API.
+services:
+  postgres:
+    image: postgres:16
+    environment:
+      POSTGRES_USER: florence
+      POSTGRES_PASSWORD: florence
+      POSTGRES_DB: florence
+    ports: ["5432:5432"]
+    volumes: ["pgdata:/var/lib/postgresql/data"]
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U florence"]
+      interval: 5s
+      timeout: 3s
+      retries: 10
+
+  redis:
+    image: redis:7
+    ports: ["6379:6379"]
+
+  opa:
+    image: openpolicyagent/opa:latest
+    command: ["run", "--server", "--addr", ":8181", "--log-level", "info", "/policies"]
+    ports: ["8181:8181"]
+    volumes: ["../policies/edena:/policies:ro"]
+
+  api:
+    build:
+      context: ..
+      dockerfile: docker/Dockerfile.api
+    environment:
+      FLORENCE_DATABASE_URL: postgresql+psycopg://florence:florence@postgres:5432/florence
+      FLORENCE_REDIS_URL: redis://redis:6379/0
+      EDENA_BASE_URL: "http://opa:8181"   # route decisions through the OPA server (Phase 2 default)
+      FLORENCE_REQUIRE_IDENTITY: "true"
+      FLORENCE_EXAMPLES_DIR: /app/examples
+      # OpenTelemetry (P1-10): set an OTLP/HTTP endpoint to export spans to a collector.
+      # OTEL_EXPORTER_OTLP_ENDPOINT: "http://otel-collector:4318"
+      OTEL_SERVICE_NAME: florence-x
+    ports: ["8000:8000"]
+    depends_on:
+      postgres: { condition: service_healthy }
+      redis: { condition: service_started }
+      opa: { condition: service_started }
+
+  # Signal-intake worker: drains the Redis queue and runs governed workflows (P1-8).
+  worker:
+    build:
+      context: ..
+      dockerfile: docker/Dockerfile.api
+    command: ["python", "-m", "app.worker"]
+    environment:
+      FLORENCE_DATABASE_URL: postgresql+psycopg://florence:florence@postgres:5432/florence
+      FLORENCE_REDIS_URL: redis://redis:6379/0
+      EDENA_BASE_URL: "http://opa:8181"
+      FLORENCE_EXAMPLES_DIR: /app/examples
+      OTEL_SERVICE_NAME: florence-x-worker
+    depends_on:
+      postgres: { condition: service_healthy }
+      redis: { condition: service_started }
+      opa: { condition: service_started }
+      api: { condition: service_started }   # let the API apply migrations first
+
+volumes:
+  pgdata:

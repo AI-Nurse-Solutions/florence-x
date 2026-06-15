@@ -1,0 +1,179 @@
+{
+  "$defs": {
+    "ActionType": {
+      "description": "Every consequential thing an agent can propose to do.",
+      "enum": [
+        "draft",
+        "summarize",
+        "retrieve",
+        "write_record",
+        "send_message",
+        "call_api",
+        "execute_code",
+        "trigger_alert",
+        "handoff_to_agent",
+        "store_memory"
+      ],
+      "title": "ActionType",
+      "type": "string"
+    },
+    "DataClass": {
+      "description": "Data classification that drives the PHI boundary + model routing.",
+      "enum": [
+        "public",
+        "internal",
+        "phi_local",
+        "phi_redacted",
+        "restricted"
+      ],
+      "title": "DataClass",
+      "type": "string"
+    },
+    "RiskTier": {
+      "description": "EDENA action-risk tiers. Ambiguity always escalates upward.",
+      "enum": [
+        "green",
+        "yellow",
+        "orange",
+        "red",
+        "red_blocked"
+      ],
+      "title": "RiskTier",
+      "type": "string"
+    }
+  },
+  "additionalProperties": false,
+  "properties": {
+    "action_id": {
+      "title": "Action Id",
+      "type": "string"
+    },
+    "workflow_run_id": {
+      "title": "Workflow Run Id",
+      "type": "string"
+    },
+    "agent_id": {
+      "title": "Agent Id",
+      "type": "string"
+    },
+    "requester_role": {
+      "title": "Requester Role",
+      "type": "string"
+    },
+    "action_type": {
+      "$ref": "#/$defs/ActionType"
+    },
+    "intended_target": {
+      "description": "The system/resource the action would touch.",
+      "title": "Intended Target",
+      "type": "string"
+    },
+    "tool_requested": {
+      "anyOf": [
+        {
+          "type": "string"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "title": "Tool Requested"
+    },
+    "data_classification": {
+      "$ref": "#/$defs/DataClass"
+    },
+    "reversible": {
+      "title": "Reversible",
+      "type": "boolean"
+    },
+    "external_boundary_crossed": {
+      "title": "External Boundary Crossed",
+      "type": "boolean"
+    },
+    "clinical_impact": {
+      "anyOf": [
+        {
+          "type": "string"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "title": "Clinical Impact"
+    },
+    "financial_impact": {
+      "anyOf": [
+        {
+          "type": "string"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "title": "Financial Impact"
+    },
+    "legal_or_compliance_impact": {
+      "anyOf": [
+        {
+          "type": "string"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "title": "Legal Or Compliance Impact"
+    },
+    "proposed_payload_hash": {
+      "description": "Hash of content, NOT the content itself.",
+      "title": "Proposed Payload Hash",
+      "type": "string"
+    },
+    "evidence_refs": {
+      "items": {
+        "type": "string"
+      },
+      "title": "Evidence Refs",
+      "type": "array"
+    },
+    "risk_hint": {
+      "$ref": "#/$defs/RiskTier",
+      "default": "yellow",
+      "description": "Orchestrator's first guess; EDENA owns the final tier."
+    },
+    "blast_radius_estimate": {
+      "anyOf": [
+        {
+          "type": "string"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "title": "Blast Radius Estimate"
+    },
+    "created_at": {
+      "format": "date-time",
+      "title": "Created At",
+      "type": "string"
+    }
+  },
+  "required": [
+    "action_id",
+    "workflow_run_id",
+    "agent_id",
+    "requester_role",
+    "action_type",
+    "intended_target",
+    "data_classification",
+    "reversible",
+    "external_boundary_crossed",
+    "proposed_payload_hash"
+  ],
+  "title": "CandidateAction",
+  "type": "object"
+}

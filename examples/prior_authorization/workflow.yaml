@@ -1,0 +1,23 @@
+workflow_id: prior_authorization_draft
+name: Prior Authorization Draft
+version: "1.0.0"
+description: Retrieve clinical evidence and draft a prior auth request. Yellow/Orange.
+signal_types: [prior_auth_needed]
+baseline_tier: yellow         # Orange at external submission
+owner_role: rn
+steps:
+  - step_id: gather_evidence
+    name: Gather FHIR-based clinical evidence
+    agent_id: prior_auth_drafter
+    produces_action: false
+    next_steps: [draft]
+  - step_id: draft
+    name: Draft prior auth request (human reviews evidence selection)
+    agent_id: prior_auth_drafter
+    produces_action: true
+    next_steps: [submit]
+  - step_id: submit
+    name: External submission to payer portal (Orange — gated)
+    agent_id: prior_auth_drafter
+    produces_action: true       # call_api + external -> orange require_human
+    next_steps: []

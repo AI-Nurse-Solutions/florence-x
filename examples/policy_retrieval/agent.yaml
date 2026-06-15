@@ -1,0 +1,21 @@
+agent_id: policy_retriever
+name: Policy & Protocol Retriever
+version: "1.0.0"
+purpose: Retrieve local policy and protocol sections, summarize faithfully, and cite source, version, and date with no extrapolation beyond the cited text.
+owner_role: rn
+institutional_approval_ref: "NAIO-APPROVAL-2026-003"
+allowed_tasks: [retrieve_policy, summarize_with_citations, return_source_sections]
+prohibited_tasks: [extrapolate_beyond_source, give_clinical_advice, write_ehr_note, send_patient_message, place_order]
+allowed_tools: [local_policy_search]
+memory:
+  write_allowed: false
+  read_allowed: true
+  allowed_memory_classes: [operational_context]
+model_route:
+  default: local_clinical_slm
+  escalation: approved_cloud_model_redacted_only
+  phi_rule: never_external_with_phi
+edena_baseline_tier: green
+evaluation_rubric: policy_citation_fidelity_v1
+fallback_behavior: return_incomplete_with_missing_flags
+decommission_path: NAIO-DECOMMISSION-PROCESS

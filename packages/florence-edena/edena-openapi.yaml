@@ -1,0 +1,112 @@
+openapi: 3.1.0
+info:
+  title: EDENA Governance API
+  version: 0.1.0
+  description: >
+    EDENA — Ethical Decision Engine for Nurse-led AI. The mandatory gate between
+    AI intent and action. Florence-X calls this service before executing any
+    consequential action. EDENA never fails open: on error, clients MUST treat
+    the action as require_human (reversible) or deny (irreversible/external).
+  license:
+    name: Apache-2.0
+servers:
+  - url: http://localhost:8181
+    description: Local reference EDENA service (docker-compose)
+paths:
+  /edena/evaluate-action:
+    post:
+      operationId: evaluateAction
+      summary: Evaluate a CandidateAction and return a governance decision.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/CandidateAction"
+      responses:
+        "200":
+          description: Governance decision.
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/EDENADecision"
+        "422":
+          description: Malformed CandidateAction (fail-closed on the client).
+  /healthz:
+    get:
+      operationId: healthz
+      summary: Liveness probe.
+      responses:
+        "200":
+          description: OK
+components:
+  schemas:
+    CandidateAction:
+      type: object
+      additionalProperties: false
+      required:
+        - action_id
+        - workflow_run_id
+        - agent_id
+        - requester_role
+        - action_type
+        - intended_target
+        - data_classification
+        - reversible
+        - external_boundary_crossed
+        - proposed_payload_hash
+      properties:
+        action_id: { type: string }
+        workflow_run_id: { type: string }
+        agent_id: { type: string }
+        requester_role: { type: string }
+        action_type:
+          type: string
+          enum: [draft, summarize, retrieve, write_record, send_message,
+                 call_api, execute_code, trigger_alert, handoff_to_agent, store_memory]
+        intended_target: { type: string }
+        tool_requested: { type: [string, "null"] }
+        data_classification:
+          type: string
+          enum: [public, internal, phi_local, phi_redacted, restricted]
+        reversible: { type: boolean }
+        external_boundary_crossed: { type: boolean }
+        clinical_impact: { type: [string, "null"] }
+        financial_impact: { type: [string, "null"] }
+        legal_or_compliance_impact: { type: [string, "null"] }
+        proposed_payload_hash:
+          type: string
+          description: Hash of proposed content. Raw content MUST NOT be sent.
+        evidence_refs:
+          type: array
+          items: { type: string }
+        risk_hint:
+          type: string
+          enum: [green, yellow, orange, red, red_blocked]
+        blast_radius_estimate: { type: [string, "null"] }
+        created_at: { type: string, format: date-time }
+    EDENADecision:
+      type: object
+      additionalProperties: false
+      required: [decision_id, action_id, decision, risk_tier, rationale]
+      properties:
+        decision_id: { type: string }
+        action_id: { type: string }
+        decision:
+          type: string
+          enum: [allow, allow_with_constraints, require_human, escalate,
+                 deny, throttle, contain, stop]
+        risk_tier:
+          type: string
+          enum: [green, yellow, orange, red, red_blocked]
+        required_human_role: { type: [string, "null"] }
+        constraints:
+          type: array
+          items: { type: string }
+        rationale: { type: string }
+        evidence_required:
+          type: array
+          items: { type: string }
+        policy_pack_version: { type: [string, "null"] }
+        decided_at: { type: string, format: date-time }
+        expires_at: { type: [string, "null"], format: date-time }

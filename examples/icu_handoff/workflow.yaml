@@ -1,0 +1,33 @@
+workflow_id: icu_shift_handoff
+name: ICU Shift Handoff Draft
+version: "1.0.0"
+description: Generate a structured draft handoff from a simulated FHIR bundle. Yellow tier.
+signal_types: [icu_handoff_needed]
+baseline_tier: yellow
+owner_role: charge_rn
+institutional_approval_ref: "NAIO-APPROVAL-2026-001"
+steps:
+  - step_id: load_context
+    name: Load + classify patient context (PHI stays local)
+    agent_id: icu_handoff_synthesizer
+    produces_action: false
+    next_steps: [draft_handoff]
+  - step_id: draft_handoff
+    name: Draft structured handoff (SBAR) with missing-data flags
+    agent_id: icu_handoff_synthesizer
+    produces_action: true          # emits a CandidateAction(draft) -> EDENA -> require_human
+    action:
+      action_type: draft
+      intended_target: icu_handoff_note
+      tool_requested: handoff_template_renderer
+      data_classification: phi_local
+      reversible: true
+      external_boundary_crossed: false
+      clinical_impact: supports handoff but does not finalize care
+    next_steps: [human_review]
+  - step_id: human_review
+    name: Charge RN reviews, edits, approves
+    produces_action: false
+    next_steps: []
+# Action rules enforced by EDENA: may draft; may not chart; may not send;
+# must show missing-data flags; must include source refs.
