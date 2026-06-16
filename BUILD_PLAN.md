@@ -237,8 +237,23 @@ Deliverables: public GitHub repo; docs site; install guide; demo video; issue/PR
 templates (`.github/`); safety disclaimers; first-contributor roadmap; RFC process
 live; CI (lint + tests + `opa test` + schema generation check); SBOM.
 
-Acceptance: clean clone → `make install && make demo && make test` works on a fresh
-machine; CI green on PRs; CONTRIBUTING + GOVERNANCE + SECURITY + CLINICAL_SAFETY in place.
+**Status: ✅ COMPLETE (launch-ready; repo stays PRIVATE until you flip it).**
+- ✅ Issue/PR templates: feature-request + `ISSUE_TEMPLATE/config.yml` (security →
+  private advisory, safety → CLINICAL_SAFETY, questions → discussions).
+- ✅ Install guide (`docs/install.md`) + DEMO walkthrough (`docs/DEMO.md`, text
+  storyboard standing in for a recorded video) + README launch polish.
+- ✅ First-contributor roadmap (`docs/ROADMAP.md`) + RFC process (`docs/rfcs/README.md`).
+- ✅ CI hardened: `test` (ruff + pytest + schema-drift) · `opa` · **`console`**
+  (next build) · **`sbom`** (CycloneDX artifact via `make sbom`). Packaging fix
+  (build-system + `py-modules=[]`) makes `pip install .` / clean-clone work.
+- ✅ Docs site: mkdocs-material (`mkdocs.yml`) + Pages workflow (`.github/workflows/docs.yml`,
+  build-strict gate now; deploy dormant until `ENABLE_PAGES=true`).
+- ⬜ **Public flip + demo video deferred** to you (repo intentionally private;
+  private-repo Pages needs a paid plan). `gh repo edit --visibility public` when ready.
+
+Acceptance: clean clone → `make install && make demo && make test` works ✅
+(packaging fixed; CI green on PRs); CONTRIBUTING + GOVERNANCE + SECURITY +
+CLINICAL_SAFETY in place ✅. **MET** except the (deliberately deferred) public flip.
 
 ---
 
