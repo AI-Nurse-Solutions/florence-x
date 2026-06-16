@@ -65,6 +65,7 @@ export interface EdenaDecision {
   rationale: string;
   evidence_required: string[];
   policy_pack_version: string | null;
+  decided_at?: string;
 }
 
 export interface HumanReviewRecord {
