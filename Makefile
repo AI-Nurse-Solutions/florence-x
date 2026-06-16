@@ -5,10 +5,17 @@ PYTHONPATH := packages/florence-core:packages/florence-edena:packages/florence-c
 # skipping. Set inline per-recipe for portability across make versions.
 TOOLING_BIN := $(CURDIR)/.tooling/bin
 
-.PHONY: install dev test lint demo up down policy-test opa-install
+.PHONY: install dev test lint demo up down policy-test opa-install sbom
 install:
 	pip install -e packages/florence-core -e packages/florence-edena -e packages/florence-cli
 	pip install ".[api,dev]"
+
+sbom:  ## Generate a CycloneDX SBOM (sbom.json) for the installed dependency tree
+	pip install --quiet -e packages/florence-core -e packages/florence-edena \
+		-e packages/florence-connectors -e packages/florence-model-router -e packages/florence-cli
+	pip install --quiet ".[api]" cyclonedx-bom
+	python -m cyclonedx_py environment --of JSON -o sbom.json
+	@echo "wrote sbom.json"
 
 opa-install:  ## Download a repo-local OPA binary into .tooling/bin (gitignored)
 	@mkdir -p $(TOOLING_BIN)

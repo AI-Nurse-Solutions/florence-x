@@ -17,3 +17,5 @@ node_modules/
 *.db
 florence_alembic_placeholder.db
 .claude/settings.local.json
+sbom.json
+site/
