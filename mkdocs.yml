@@ -1,0 +1,58 @@
+site_name: Florence-X
+site_description: >-
+  Governance-first, local-first AI orchestration control plane for high-trust
+  clinical environments. Florence-X orchestrates. EDENA gates. Humans decide.
+repo_url: https://github.com/AI-Nurse-Solutions/florence-x
+docs_dir: docs
+
+theme:
+  name: material
+  palette:
+    - scheme: default
+      primary: teal
+      accent: teal
+      toggle: { icon: material/weather-night, name: Dark mode }
+    - scheme: slate
+      primary: teal
+      accent: teal
+      toggle: { icon: material/weather-sunny, name: Light mode }
+  features:
+    - navigation.sections
+    - navigation.top
+    - content.code.copy
+    - toc.follow
+
+markdown_extensions:
+  - admonition
+  - tables
+  - toc: { permalink: true }
+  - pymdownx.superfences
+  - pymdownx.details
+
+nav:
+  - Home: index.md
+  - Getting started:
+      - Install & run: install.md
+      - Demo walkthrough: DEMO.md
+  - Architecture:
+      - Reference architecture: architecture.md
+      - EDENA integration: edena-integration.md
+      - Zero Trust model: zero-trust-model.md
+      - CDS Hooks integration: cds-hooks-integration.md
+      - Deployment: deployment-guide.md
+  - Safety & governance:
+      - Safety model: safety-model.md
+      - PHI boundary: phi-boundary-model.md
+      - Threat model: threat-model.md
+      - Memory governance: memory-governance.md
+  - Contributing:
+      - Roadmap: ROADMAP.md
+      - RFC process: rfcs/README.md
+  - RFCs:
+      - 0001 Core object model: rfcs/0001-core-object-model.md
+      - 0002 EDENA decision API: rfcs/0002-edena-decision-api.md
+      - 0003 Agent registry: rfcs/0003-agent-registry.md
+      - 0004 Tool & connector gateway: rfcs/0004-tool-gateway.md
+      - 0005 Memory governance: rfcs/0005-memory-governance.md
+      - 0006 PHI boundary: rfcs/0006-phi-boundary.md
+      - 0007 Durable execution (LangGraph): rfcs/0007-durable-execution-langgraph.md
