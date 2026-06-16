@@ -5,7 +5,7 @@ from fastapi import FastAPI
 
 from .config import settings
 from .middleware import ZeroTrustMiddleware
-from .routes import edena, reviews, runs, signals
+from .routes import cds, edena, reviews, runs, signals
 from .telemetry import setup_telemetry
 
 # Configure OpenTelemetry export when an OTLP endpoint is set (no-op otherwise).
@@ -21,6 +21,7 @@ app.add_middleware(ZeroTrustMiddleware, require_identity=settings.require_identi
 app.include_router(signals.router)
 app.include_router(runs.router)
 app.include_router(reviews.router)
+app.include_router(cds.router)
 app.include_router(edena.router)  # reference EDENA (see routes/edena.py docstring)
 
 
