@@ -55,20 +55,24 @@ evaluation. Every run produces an `EvidenceBundle`. PHI stays local by default.
 ## Quickstart
 
 ```bash
-# 1. Install (editable) + dev/api extras
+# 1. Install (editable) + dev/api extras, and a repo-local OPA binary
 make install
+make opa-install            # OPA for the policy parity tests (optional but recommended)
 
 # 2. Run the ICU handoff demo end-to-end — no services required
 make demo
 #   Signal → context classified → draft → EDENA(require_human, yellow)
 #   → simulated approval → tool executes → EvidenceBundle persisted
 
-# 3. Run the test suite (unit / safety / policy / phi_boundary)
+# 3. Run the test suite (unit / safety / policy / phi_boundary / integration)
 make test
 
-# 4. Bring up the full local stack (Postgres + Redis + OPA + API)
+# 4. Bring up the full local stack (Postgres + Redis + OPA + API + worker)
 make up
 ```
+
+Full setup, env vars, and the steward console: [`docs/install.md`](./docs/install.md).
+A narrated end-to-end walkthrough: [`docs/DEMO.md`](./docs/DEMO.md).
 
 Call the API (Zero Trust requires identity headers):
 
@@ -83,21 +87,27 @@ curl -s -X POST 'localhost:8000/signals?auto_approve=true' \
        "patient_context_present":true}'
 ```
 
-## What's in this release (Phase 0 + Phase 1)
+## What's in this release (Phases 0–4 complete)
 
 - **Core object model** — Pydantic v2 schemas for every governed object
   (`CandidateAction`, `EDENADecision`, `Signal`, `EvidenceBundle`, …).
-- **EDENA client + reference policy engine** — fail-closed client, a pure-Python
-  `LocalRuleBackend`, an `OpaBackend`, and Rego policy packs
-  (`green/yellow/orange/red/blocked`).
-- **The canonical runtime loop** — `Signal → … → EvidenceBundle`, with an
-  append-only CloudEvents log and a human-review interrupt.
-- **FastAPI surface** — signal intake, run/evidence retrieval, reference EDENA
-  endpoint, Zero Trust middleware.
-- **CLI** — `florence run examples/icu_handoff/workflow.yaml`.
-- **5 MVP workflows** + synthetic FHIR fixtures (no real PHI).
+- **EDENA client + policy engine** — fail-closed client, pure-Python
+  `LocalRuleBackend`, `OpaBackend` (CLI) + `OpaHttpBackend` (server), Rego packs
+  (`green/yellow/orange/red/blocked`) + per-workflow overlays.
+- **Durable runtime** — the canonical loop as a LangGraph `StateGraph` with
+  checkpointed human-review interrupts and restart-safe resume (RFC 0007); a
+  minimal step runner remains behind `FLORENCE_RUNTIME=minimal` (evidence parity).
+- **Persistence + ops** — PostgresRepository + Alembic, Redis/in-process intake
+  queue + worker, append-only events/evidence, OpenTelemetry tracing.
+- **Governance** — review-queue API (`/reviews`), incidents + containment ladder
+  (deny/stop/contain/escalate/throttle), `PolicyPack` versioning.
+- **Steward console** — Next.js human-authority interface (review cockpit,
+  evidence/decision inspector, live WebSocket, registry, incidents).
+- **Healthcare sandbox** — governed tool gateway, FHIR R4 + CDS Hooks + SMART,
+  PHI redaction + Ollama, 5 workflow demos, point-of-care latency budget.
 
-See [`BUILD_PLAN.md`](./BUILD_PLAN.md) for the full phased plan and what comes next.
+See [`BUILD_PLAN.md`](./BUILD_PLAN.md) for the phased plan and
+[`docs/ROADMAP.md`](./docs/ROADMAP.md) for where to contribute next.
 
 ## Repository map
 
@@ -120,6 +130,8 @@ tests/                         # unit / integration / policy / safety / phi_boun
 
 - [`CLAUDE.md`](./CLAUDE.md) — session constitution + non-negotiable rules
 - [`BUILD_PLAN.md`](./BUILD_PLAN.md) — phased build plan + acceptance gates
+- [`docs/install.md`](./docs/install.md) — setup, env vars, console · [`docs/DEMO.md`](./docs/DEMO.md) — walkthrough
+- [`CONTRIBUTING.md`](./CONTRIBUTING.md) · [`docs/ROADMAP.md`](./docs/ROADMAP.md) · [`docs/rfcs/README.md`](./docs/rfcs/README.md) — how to contribute
 - [`docs/architecture.md`](./docs/architecture.md) — the 9-layer reference architecture
 - [`docs/edena-integration.md`](./docs/edena-integration.md) — EDENA API contract + policy model
 - [`docs/phi-boundary-model.md`](./docs/phi-boundary-model.md) · [`docs/safety-model.md`](./docs/safety-model.md) · [`docs/threat-model.md`](./docs/threat-model.md)

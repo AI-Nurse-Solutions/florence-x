@@ -35,3 +35,28 @@ jobs:
         run: |
           opa check policies
           opa test policies -v
+
+  console:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with: { node-version: "20" }
+      - name: Build steward console
+        working-directory: apps/steward-console
+        run: |
+          npm ci
+          npm run build
+
+  sbom:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with: { python-version: "3.12" }
+      - name: Generate CycloneDX SBOM
+        run: make sbom
+      - uses: actions/upload-artifact@v4
+        with:
+          name: sbom
+          path: sbom.json
