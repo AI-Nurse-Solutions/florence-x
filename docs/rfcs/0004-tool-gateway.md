@@ -1,6 +1,6 @@
 # RFC 0004 — Tool & Connector Gateway
 
-- **Status:** Proposed (Phase 4 implementation; contract fixed now)
+- **Status:** Accepted (implemented in Phase 4 — `florence_connectors/gateway.py`)
 - **Date:** 2026-06-15
 
 ## Context

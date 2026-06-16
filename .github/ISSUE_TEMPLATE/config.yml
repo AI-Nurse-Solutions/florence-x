@@ -1,0 +1,11 @@
+blank_issues_enabled: false
+contact_links:
+  - name: Security vulnerability (private)
+    url: https://github.com/AI-Nurse-Solutions/florence-x/security/advisories/new
+    about: Report security issues privately via a GitHub security advisory — do NOT open a public issue. See SECURITY.md.
+  - name: Clinical safety concern
+    url: https://github.com/AI-Nurse-Solutions/florence-x/issues/new?template=safety_concern.md
+    about: Patient-safety or governance concern — see CLINICAL_SAFETY.md.
+  - name: Question / discussion
+    url: https://github.com/AI-Nurse-Solutions/florence-x/discussions
+    about: Ask a question or propose an idea before filing an issue.
