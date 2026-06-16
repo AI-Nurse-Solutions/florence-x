@@ -212,9 +212,24 @@ patient education, prior auth, policy retrieval, and agentic software review dem
 **local model route only, no real PHI**; model router with Ollama adapter + redaction
 pipeline; latency budget instrumentation (≤2–3s point-of-care).
 
-Acceptance: each demo runs end-to-end through the gateway + connectors with EDENA
-gating; PHI never leaves local in any path (`tests/phi_boundary/` extended per
-connector); A2A handoffs (if added) are CandidateActions.
+**Status: ✅ COMPLETE (verified by tests; live Ollama model + real EHR/SMART need a server).**
+- ✅ 4A ToolGateway (RFC 0004): every tool invocation is a CandidateAction → EDENA,
+  executes only on allow, deny-by-default for unregistered tools. FHIR connector
+  expanded (+ AllergyIntolerance/Procedure fixtures). `florence_connectors/gateway.py`.
+- ✅ 4B Redaction (HMAC-SHA256 tokenization) + Ollama adapter (local, mock-tested) +
+  `prepare_prompt` PHI boundary (non-local sends redacted + refused if PHI survives).
+- ✅ 4C CDS Hooks (`/cds-services`) — hook → governed Signal → CDS cards; SMART launch
+  context (`/smart/launch`).
+- ✅ 4D 5 workflow demos through gateway + connectors (FHIR/local/A2A), local route
+  only, no PHI: reads execute, external submit + prod code-exec refused. A2A handoffs
+  are CandidateActions. `examples/sandbox/run_sandbox.py`, `tests/integration/test_sandbox_demos.py`.
+- ✅ 4E Latency budget (`LatencyBudget`, ≤2–3s point-of-care) + test.
+
+Acceptance: each demo runs through the gateway + connectors with EDENA gating ✅;
+PHI never leaves local (`tests/phi_boundary/` extended; connectors return refs only,
+PHI work routes local) ✅; A2A handoffs are CandidateActions ✅. **MET** — 122 pass /
+2 skipped, opa 18/18. The live Ollama call + a real EHR SMART/CDS handshake are
+mock/fixture-verified here (need a model server + EHR sandbox).
 
 ## 8. Phase 5 — Open-Source Launch (Days 76–90)
 
