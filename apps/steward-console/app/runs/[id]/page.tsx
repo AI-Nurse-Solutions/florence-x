@@ -1,6 +1,7 @@
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import { DecisionInspector } from "@/components/DecisionInspector";
+import { LiveRunFeed } from "@/components/LiveRunFeed";
 import { RunTimeline } from "@/components/RunTimeline";
 import { api } from "@/lib/api";
 import type { EvidenceBundle, WorkflowRun } from "@/lib/types";
@@ -96,9 +97,12 @@ export default async function RunPage({ params }: { params: Promise<{ id: string
           )}
         </div>
 
-        <div>
+        <div className="space-y-6">
           <Card title="Timeline">
             <RunTimeline run={run} bundle={bundle} />
+          </Card>
+          <Card title="Live activity">
+            <LiveRunFeed runId={run.workflow_run_id} />
           </Card>
         </div>
       </div>

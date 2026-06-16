@@ -1,4 +1,5 @@
 import Link from "next/link";
+import { LiveRefresh } from "@/components/LiveRefresh";
 import { TierBadge } from "@/components/TierBadge";
 import { api } from "@/lib/api";
 import type { ReviewItem } from "@/lib/types";
@@ -17,7 +18,10 @@ export default async function ReviewQueuePage() {
     <div>
       <div className="mb-6 flex items-baseline justify-between">
         <h1 className="text-2xl font-semibold tracking-tight">Review queue</h1>
-        <span className="text-sm text-gray-500">{reviews.length} awaiting a human</span>
+        <div className="flex items-center gap-4">
+          <LiveRefresh />
+          <span className="text-sm text-gray-500">{reviews.length} awaiting a human</span>
+        </div>
       </div>
 
       {error && (
