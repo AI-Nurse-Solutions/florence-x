@@ -1,8 +1,14 @@
 # Florence-X
 
+[![Docs](https://img.shields.io/badge/docs-florence--x-0a7e8c)](https://ai-nurse-solutions.github.io/florence-x/)
+[![CI](https://github.com/AI-Nurse-Solutions/florence-x/actions/workflows/ci.yml/badge.svg)](https://github.com/AI-Nurse-Solutions/florence-x/actions/workflows/ci.yml)
+[![License](https://img.shields.io/badge/license-Apache--2.0-blue)](./LICENSE)
+
 **A governance-first, local-first AI orchestration control plane for high-trust clinical environments.**
 
 > **Florence-X orchestrates. EDENA gates. Humans decide. Nurses steward.**
+
+📖 **Documentation:** https://ai-nurse-solutions.github.io/florence-x/
 
 Florence-X turns institutional signals into bounded, auditable, human-stewarded
 workflows. It routes tasks to registered agents, assigns tools and memory, selects
