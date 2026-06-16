@@ -12,6 +12,7 @@ build/
 .mypy_cache/
 node_modules/
 .next/
+*.tsbuildinfo
 .tooling/
 *.db
 florence_alembic_placeholder.db

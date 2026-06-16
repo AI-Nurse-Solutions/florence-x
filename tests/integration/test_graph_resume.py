@@ -15,7 +15,7 @@ from florence_core.events import EventLog, NullSink
 from florence_core.schemas import HumanReview, RequesterContext, Signal
 from florence_core.schemas.enums import HumanReviewOutcome
 from florence_core.state import InMemoryRepository
-from florence_core.workflows import AutoApproveReviewer, QueueReviewer, load_agent, load_workflow
+from florence_core.workflows import QueueReviewer, load_agent, load_workflow
 from florence_core.workflows.graph_runtime import GraphRuntime
 from florence_edena import EdenaClient
 

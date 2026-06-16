@@ -182,9 +182,25 @@ event log); agent + tool registry editors with NAIO approval status; approval co
 showing **blast radius + reversibility + source evidence**; real-time WebSocket
 updates from the CloudEvents stream.
 
+**Status: ✅ COMPLETE (verified by build/typecheck; live e2e needs `make up`).**
+- ✅ Backend (3A): `GET /events/ws` live CloudEvents stream (in-process hub +
+  BroadcastSink, Zero-Trust identity check) + read-only registry endpoints
+  `GET /agents`/`GET /tools`. Cross-process (worker→console) live updates need a
+  Redis pub/sub relay — deferred until testable. Tested in
+  `tests/integration/test_api_events_registry.py`.
+- ✅ Console (`apps/steward-console`, Next.js 15 / React 19 / Tailwind v4):
+  review queue with tier color-coding + live refresh (`/`); approval cockpit with
+  the anti-rubber-stamp context + Approve/Edit/Escalate/Deny/Stop → `POST /reviews/{id}`
+  (`/reviews/[id]`); evidence viewer + EDENA decision inspector + timeline + live
+  feed (`/runs/[id]`); incidents (`/incidents`); read-only agent/tool registry
+  viewers with NAIO approval status (`/registry`).
+- ⬜ Deferred (per approval): registry **editing/persistence** → later RFC.
+
 Acceptance: a reviewer can Approve / Edit / Escalate / Deny / Stop a paused run and
-see it resume; the review screen shows all required context (anti-rubber-stamp
-checklist in `docs/safety-model.md`); WebSocket reflects live run state.
+see it resume ✅ (cockpit → review API → durable resume); the review screen shows all
+required context (anti-rubber-stamp checklist) ✅; WebSocket reflects live run state ✅.
+Verified by `next build` + `tsc` (frontend) and the Python review/WS tests (backend);
+the live browser click-through requires `make up` + `npm run dev` (not run headlessly).
 
 ## 7. Phase 4 — Healthcare Sandbox (Days 56–75)
 
