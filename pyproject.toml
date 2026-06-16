@@ -1,3 +1,7 @@
+[build-system]
+requires = ["setuptools>=61"]
+build-backend = "setuptools.build_meta"
+
 [project]
 name = "florence-x"
 version = "0.1.0"
@@ -23,6 +27,12 @@ florence = "florence_cli.main:main"
 #   pip install -e packages/florence-core -e packages/florence-edena \
 #               -e packages/florence-connectors -e packages/florence-model-router \
 #               -e packages/florence-cli
+# The root project ships no importable packages of its own — the code lives in
+# packages/* (installed separately). Tell setuptools so it doesn't try to
+# auto-discover apps/, packages/, schemas/, … as a flat layout.
+[tool.setuptools]
+py-modules = []
+
 [tool.ruff]
 line-length = 110
 target-version = "py312"

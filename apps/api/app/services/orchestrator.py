@@ -9,6 +9,7 @@ from pathlib import Path
 from florence_core.dispatcher import Dispatcher
 from florence_core.events import EventLog, JsonlSink
 from florence_core.schemas import (
+    AgentDefinition,
     EvidenceBundle,
     HumanReview,
     Incident,
@@ -17,8 +18,6 @@ from florence_core.schemas import (
     WorkflowRun,
 )
 from florence_core.schemas.enums import WorkflowRunStatus
-
-from ..review import ReviewDecisionRequest, ReviewItem
 from florence_core.workflows import (
     AutoApproveReviewer,
     QueueReviewer,
@@ -31,7 +30,9 @@ from florence_edena import EdenaClient, EdenaConfig
 from ..checkpoint import make_checkpointer
 from ..config import settings
 from ..db import make_event_sinks, make_repository
+from ..events_stream import BroadcastSink
 from ..queue import SignalAccepted, SignalTask, make_queue
+from ..review import ReviewDecisionRequest, ReviewItem
 
 
 class OrchestratorService:
@@ -45,7 +46,8 @@ class OrchestratorService:
         self._load_examples(Path(settings.examples_dir))
         # Always emit to append-only JSONL; also to the Postgres events table when
         # a DB is configured (P1-11).
-        self.events = EventLog(JsonlSink(settings.event_log_path), *make_event_sinks())
+        self.events = EventLog(JsonlSink(settings.event_log_path), *make_event_sinks(),
+                               BroadcastSink())
         # EDENA backend: OPA server when EDENA_BASE_URL is set, else LocalRuleBackend (P1-12).
         self._edena = EdenaClient(EdenaConfig(base_url=settings.edena_base_url or None))
         # Execution engine (P1-9): durable LangGraph runtime, or the minimal runner.
@@ -82,6 +84,19 @@ class OrchestratorService:
 
     def policy_packs(self) -> list[PolicyPack]:
         return self.repo.list_policy_packs()
+
+    # -- registry viewers (read-only; write/persistence deferred to a later RFC) --
+    def list_agents(self) -> list[AgentDefinition]:
+        return list(self.agents.values())
+
+    def list_tools(self) -> list[dict]:
+        """Authorization view: each tool the registered agents may use, and which
+        agents are scoped to it. (No standalone tool registry is persisted yet.)"""
+        by_tool: dict[str, list[str]] = {}
+        for agent in self.agents.values():
+            for tool_id in agent.allowed_tools:
+                by_tool.setdefault(tool_id, []).append(agent.agent_id)
+        return [{"tool_id": t, "authorized_agents": sorted(a)} for t, a in sorted(by_tool.items())]
 
     def _load_examples(self, examples_dir: Path) -> None:
         if not examples_dir.exists():
