@@ -8,7 +8,7 @@ TOOLING_BIN := $(CURDIR)/.tooling/bin
 PYTHON ?= python3
 PIP := $(PYTHON) -m pip
 
-.PHONY: install dev test lint demo up down policy-test opa-install sbom e2e eval
+.PHONY: install dev test lint demo up down policy-test opa-install sbom e2e eval pilot-report
 install:
 	$(PIP) install -e packages/florence-core -e packages/florence-edena -e packages/florence-cli
 	$(PIP) install ".[api,dev]"
@@ -51,6 +51,9 @@ policy-test:  ## Run the Rego decision-ladder tests (needs opa; `make opa-instal
 
 e2e:  ## Live end-to-end proof: real OPA + uvicorn + durable runtime over HTTP
 	PATH="$(TOOLING_BIN):$$PATH" $(PYTHON) scripts/e2e_live.py
+
+pilot-report:  ## Generate the pilot evidence report (pilot-report.md) for stakeholders
+	PYTHONPATH=$(PYTHONPATH) $(PYTHON) scripts/pilot_report.py
 
 eval: demo test policy-test e2e  ## 30-minute self-eval: run every proof in sequence
 	@echo ""

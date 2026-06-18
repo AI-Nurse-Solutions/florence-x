@@ -18,4 +18,5 @@ node_modules/
 florence_alembic_placeholder.db
 .claude/settings.local.json
 sbom.json
+pilot-report.md
 site/
