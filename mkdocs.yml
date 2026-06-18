@@ -33,6 +33,7 @@ nav:
   - Home: index.md
   - Getting started:
       - Install & run: install.md
+      - Evaluate in 30 minutes: eval.md
       - Demo walkthrough: DEMO.md
       - Live end-to-end proof: live-e2e.md
   - Architecture:
