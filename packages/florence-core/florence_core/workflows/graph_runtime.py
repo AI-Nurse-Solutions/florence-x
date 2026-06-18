@@ -242,6 +242,10 @@ class GraphRuntime:
             run.status = WorkflowRunStatus.COMPLETED
         builder = EvidenceBundleBuilder.from_bundle(self._bundle(state))
         bundle = builder.finalize(final_action=state.get("final_action"))
+        # A run that paused already persisted a partial bundle under the start id;
+        # this completion is a new immutable revision (append-only store keeps both,
+        # never shadows). run.evidence_bundle_id points at the latest.
+        bundle.bundle_id = f"ev_{uuid.uuid4().hex[:12]}"
         self.repo.save_evidence(bundle)
         run.evidence_bundle_id = bundle.bundle_id
         run.completed_at = bundle.completed_at
@@ -297,6 +301,9 @@ class GraphRuntime:
         run = WorkflowRun.model_validate(snap["run"])
         builder = EvidenceBundleBuilder.from_bundle(EvidenceBundle.model_validate(snap["bundle"]))
         bundle = builder.finalize(final_action="awaiting_human_review")
+        # Distinct revision per persist so the append-only store never shadows a
+        # later finalize (incl. repeated pauses in a multi-step run).
+        bundle.bundle_id = f"ev_{uuid.uuid4().hex[:12]}"
         self.repo.save_evidence(bundle)
         run.evidence_bundle_id = bundle.bundle_id
         run.status = WorkflowRunStatus.AWAITING_HUMAN

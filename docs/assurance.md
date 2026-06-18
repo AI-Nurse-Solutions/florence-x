@@ -52,4 +52,12 @@ test that *fails if the promise is broken*.
 
 We invite scrutiny: if you can make a consequential action execute without an
 EDENA decision, leak PHI to a non-local model, or mutate an evidence record, open
-a security advisory (see `SECURITY.md`) — that's exactly the bug we want.
+a security advisory (see `SECURITY.md`) — that's exactly the bug we want. See
+[CHALLENGE.md](CHALLENGE.md) for the rules, and [live-e2e.md](live-e2e.md) for a
+runnable target (`make e2e`).
+
+!!! note "The matrix is exercised live, not just in unit tests"
+    `make e2e` boots a real OPA server + the real HTTP API + the durable runtime and
+    re-checks these invariants end-to-end. That live run already caught a real bug
+    the mocked tests missed (append-only evidence shadowing on resume) — see
+    [live-e2e.md](live-e2e.md).

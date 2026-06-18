@@ -34,6 +34,7 @@ nav:
   - Getting started:
       - Install & run: install.md
       - Demo walkthrough: DEMO.md
+      - Live end-to-end proof: live-e2e.md
   - Architecture:
       - Reference architecture: architecture.md
       - EDENA integration: edena-integration.md
@@ -42,6 +43,7 @@ nav:
       - Deployment: deployment-guide.md
   - Safety & governance:
       - Assurance (invariant ↔ attack ↔ test): assurance.md
+      - Break the gate (challenge): CHALLENGE.md
       - Safety model: safety-model.md
       - PHI boundary: phi-boundary-model.md
       - Threat model: threat-model.md

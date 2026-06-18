@@ -5,7 +5,7 @@ PYTHONPATH := packages/florence-core:packages/florence-edena:packages/florence-c
 # skipping. Set inline per-recipe for portability across make versions.
 TOOLING_BIN := $(CURDIR)/.tooling/bin
 
-.PHONY: install dev test lint demo up down policy-test opa-install sbom
+.PHONY: install dev test lint demo up down policy-test opa-install sbom e2e
 install:
 	pip install -e packages/florence-core -e packages/florence-edena -e packages/florence-cli
 	pip install ".[api,dev]"
@@ -45,3 +45,6 @@ down:
 
 policy-test:  ## Run the Rego decision-ladder tests (needs opa; `make opa-install`)
 	PATH="$(TOOLING_BIN):$$PATH" opa test policies -v
+
+e2e:  ## Live end-to-end proof: real OPA + uvicorn + durable runtime over HTTP
+	PATH="$(TOOLING_BIN):$$PATH" python scripts/e2e_live.py
