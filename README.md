@@ -140,6 +140,7 @@ tests/                         # unit / integration / policy / safety / phi_boun
 - [`CONTRIBUTING.md`](./CONTRIBUTING.md) · [`docs/ROADMAP.md`](./docs/ROADMAP.md) · [`docs/rfcs/README.md`](./docs/rfcs/README.md) — how to contribute
 - [`docs/architecture.md`](./docs/architecture.md) — the 9-layer reference architecture
 - [`docs/edena-integration.md`](./docs/edena-integration.md) — EDENA API contract + policy model
+- [`docs/assurance.md`](./docs/assurance.md) — **invariant ↔ attack ↔ test matrix** (the adversarial proof)
 - [`docs/phi-boundary-model.md`](./docs/phi-boundary-model.md) · [`docs/safety-model.md`](./docs/safety-model.md) · [`docs/threat-model.md`](./docs/threat-model.md)
 
 ## Licensing

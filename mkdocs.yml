@@ -41,6 +41,7 @@ nav:
       - CDS Hooks integration: cds-hooks-integration.md
       - Deployment: deployment-guide.md
   - Safety & governance:
+      - Assurance (invariant ↔ attack ↔ test): assurance.md
       - Safety model: safety-model.md
       - PHI boundary: phi-boundary-model.md
       - Threat model: threat-model.md
