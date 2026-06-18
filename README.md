@@ -9,6 +9,7 @@
 > **Florence-X orchestrates. EDENA gates. Humans decide. Nurses steward.**
 
 📖 **Documentation:** https://ai-nurse-solutions.github.io/florence-x/
+🔬 **Don't trust it — verify it.** Clone, then `make install && make opa-install && make eval` proves the five governance claims on your machine in ~30 min — see [`docs/eval.md`](./docs/eval.md).
 
 Florence-X turns institutional signals into bounded, auditable, human-stewarded
 workflows. It routes tasks to registered agents, assigns tools and memory, selects
