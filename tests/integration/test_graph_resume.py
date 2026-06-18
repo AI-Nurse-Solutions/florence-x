@@ -83,6 +83,38 @@ def test_resume_from_fresh_runtime_after_restart(tmp_path):
     assert repo.get_run(RUN_ID).status == "completed"
 
 
+def test_resumed_evidence_records_the_review_on_a_durable_repo(tmp_path):
+    """Regression (caught by the live e2e run): with an append-only durable repo,
+    the partial pause-bundle must NOT shadow the final bundle — the persisted
+    evidence at run.evidence_bundle_id must contain the human review."""
+    from sqlalchemy import create_engine
+    from sqlalchemy.orm import sessionmaker
+
+    from app.db.models import Base
+    from app.db.repository import PostgresRepository
+
+    engine = create_engine(f"sqlite:///{tmp_path / 'durable.db'}", future=True)
+    Base.metadata.create_all(engine)
+    repo = PostgresRepository(sessionmaker(bind=engine, autoflush=False, expire_on_commit=False))
+
+    agent = load_agent(AG)
+    rt = GraphRuntime(EdenaClient(), repo=repo, events=EventLog(NullSink()),
+                      agents={agent.agent_id: agent}, reviewer=QueueReviewer(),
+                      checkpointer=_saver(tmp_path / "ck.db"))
+    paused = rt.run(load_workflow(WF), _signal(), run_id=RUN_ID)
+    review = HumanReview(
+        review_id="hr_d", action_id=paused.edena_decisions[0].action_id,
+        decision_id=paused.edena_decisions[0].decision_id, reviewer_role="rn",
+        reviewer_ref="HUMAN", outcome=HumanReviewOutcome.APPROVE)
+    rt.resume(RUN_ID, review)
+
+    run = repo.get_run(RUN_ID)
+    persisted = repo.get_evidence(run.evidence_bundle_id)
+    assert run.status == "completed"
+    assert [r.outcome for r in persisted.human_reviews] == ["approve"]
+    assert persisted.final_action == "draft"
+
+
 def test_resume_with_deny_blocks_the_run(tmp_path):
     agent = load_agent(AG)
     rt = GraphRuntime(EdenaClient(), events=EventLog(NullSink()),
