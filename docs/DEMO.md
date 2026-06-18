@@ -1,7 +1,7 @@
 # Demo walkthrough
 
-A narrated tour of the governed loop. (Text storyboard — a recorded video is a
-launch to-do.)
+A narrated tour of the governed loop. To **record** a screen-capture demo, use the
+shot-by-shot + voiceover script: [demo-script.md](demo-script.md).
 
 ## 1. The governed run (no services)
 ```bash
