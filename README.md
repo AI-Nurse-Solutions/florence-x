@@ -139,6 +139,7 @@ tests/                         # unit / integration / policy / safety / phi_boun
 - [`BUILD_PLAN.md`](./BUILD_PLAN.md) — phased build plan + acceptance gates
 - [`docs/install.md`](./docs/install.md) — setup, env vars, console · [`docs/DEMO.md`](./docs/DEMO.md) — walkthrough
 - [`CONTRIBUTING.md`](./CONTRIBUTING.md) · [`docs/ROADMAP.md`](./docs/ROADMAP.md) · [`docs/rfcs/README.md`](./docs/rfcs/README.md) — how to contribute
+- [`docs/pilot.md`](./docs/pilot.md) — **design-partner pilot kit** (charter, `make pilot-report`, success criteria, compliance checklist)
 - [`docs/architecture.md`](./docs/architecture.md) — the 9-layer reference architecture
 - [`docs/edena-integration.md`](./docs/edena-integration.md) — EDENA API contract + policy model
 - [`docs/assurance.md`](./docs/assurance.md) — **invariant ↔ attack ↔ test matrix** (the adversarial proof) · [`docs/live-e2e.md`](./docs/live-e2e.md) (`make e2e`) · [`docs/CHALLENGE.md`](./docs/CHALLENGE.md) — **try to break it**

@@ -49,6 +49,10 @@ nav:
       - PHI boundary: phi-boundary-model.md
       - Threat model: threat-model.md
       - Memory governance: memory-governance.md
+  - Pilot kit:
+      - Design-partner pilot: pilot.md
+      - Success criteria: pilot-success-criteria.md
+      - Compliance checklist: pilot-compliance-checklist.md
   - Contributing:
       - Roadmap: ROADMAP.md
       - RFC process: rfcs/README.md
