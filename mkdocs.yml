@@ -32,6 +32,7 @@ markdown_extensions:
 nav:
   - Home: index.md
   - Announcement: press-release.md
+  - Announcement (social copy): announcement-social.md
   - Getting started:
       - Install & run: install.md
       - Evaluate in 30 minutes: eval.md

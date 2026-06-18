@@ -115,3 +115,5 @@ the [threat model](threat-model.md).
 
 Florence Nightingale made care safer by insisting on evidence. Florence-X makes AI
 safe to *act* the same way — and hands you the lamp.
+
+_Sharing this? Ready-to-post copy: [announcement-social.md](announcement-social.md)._
