@@ -17,6 +17,9 @@ memory write, handoff, A2A message, and external API action as a governed event.
 | Human–Agent Trust Exploitation | ASI09 | Meaningful review UI (context, evidence, blast radius) |
 | Rogue Agents | ASI10 | Agent registry w/ decommissioning + containment |
 
+Each mitigation is exercised adversarially in `tests/redteam/` — see
+[`assurance.md`](assurance.md) for the invariant ↔ attack ↔ test matrix.
+
 ## Key invariants
 - EDENA fails closed (`tests/safety/`).
 - `restricted` data and production code execution are hard-blocked.
