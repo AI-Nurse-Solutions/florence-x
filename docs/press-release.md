@@ -7,6 +7,22 @@ high-trust clinical environments — now public, documented, and verifiable.**
 
 ---
 
+## Why "Florence-X"?
+Florence Nightingale is remembered for the lamp she carried through the dark
+wards — but her revolution was **evidence**. She counted, charted, and proved that
+disciplined observation and safer process saved lives. She brought light to the
+human condition, made care measurably better, and made the nurse its steward.
+
+Florence-X carries that forward into the age of AI that *acts*. The lamp is the
+**EvidenceBundle** — every action lit up, accountable, auditable. The discipline
+is the **EDENA gate**. The steward is still the **nurse**.
+
+And the **"X" is the unknown — the multiplier you bring.** Take the light and make
+it your own story: your workflows, your policies, your institution. Florence lit
+the way; *X* is what you build with it.
+
+---
+
 ## The problem we built for
 Clinical AI has moved from *answering* to *acting* — drafting notes, placing
 orders, messaging patients, handing off to other agents. The hard question is no
@@ -96,3 +112,6 @@ out.
 If you're building agentic systems near patient care, we'd value your eyes on the
 [architecture](architecture.md), the [EDENA contract](edena-integration.md), and
 the [threat model](threat-model.md).
+
+Florence Nightingale made care safer by insisting on evidence. Florence-X makes AI
+safe to *act* the same way — and hands you the lamp.
