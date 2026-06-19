@@ -1,5 +1,7 @@
 # Announcing Florence-X
 
+<img src="assets/florence-x-banner.jpeg" alt="Florence-X — human authority over AI" style="width:100%;border-radius:6px;margin-bottom:1.5rem;">
+
 **An open-source, governance-first, local-first AI orchestration control plane for
 high-trust clinical environments — now public, documented, and verifiable.**
 
@@ -117,3 +119,9 @@ Florence Nightingale made care safer by insisting on evidence. Florence-X makes 
 safe to *act* the same way — and hands you the lamp.
 
 _Sharing this? Ready-to-post copy: [announcement-social.md](announcement-social.md)._
+
+---
+
+<div style="text-align:center;margin-top:2rem;">
+<img src="assets/florence-x-infographic.png" alt="Florence-X — announcing, why, how it works" style="max-width:720px;width:100%;border-radius:6px;">
+</div>
