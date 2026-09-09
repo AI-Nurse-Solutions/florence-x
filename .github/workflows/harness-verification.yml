@@ -52,6 +52,9 @@ jobs:
           ruff --version >> /tmp/harness-evidence/tool-versions.txt
           opa version >> /tmp/harness-evidence/tool-versions.txt
           git rev-parse HEAD > /tmp/harness-evidence/tested-commit.txt
+          # Tracked public source only: no .git, credentials, runtime data, or workspace files.
+          git archive --format=tar HEAD > /tmp/harness-evidence/source.tar
+          git ls-tree -r HEAD > /tmp/harness-evidence/source-tree.txt
       - name: Full test collection
         id: tests
         run: |
