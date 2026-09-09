@@ -6,6 +6,7 @@ pytest.importorskip("httpx")
 
 from fastapi.testclient import TestClient
 
+from app.config import settings
 from app.main import app
 from app.services import get_orchestrator
 
@@ -26,7 +27,9 @@ def client():
         yield c
 
 
-def test_ws_streams_live_cloudevents(client):
+def test_ws_streams_live_cloudevents(client, monkeypatch):
+    # This synthetic test explicitly opts into simulated approval.
+    monkeypatch.setattr(settings, "allow_simulated_review", True)
     with client.websocket_connect("/events/ws?identity=nurse-123&role=rn") as ws:
         # Trigger a synchronous run; its events should arrive on the socket.
         resp = client.post("/signals?sync=true&auto_approve=true", json=SIGNAL, headers=HEADERS)

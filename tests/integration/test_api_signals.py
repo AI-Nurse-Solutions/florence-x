@@ -8,6 +8,7 @@ pytest.importorskip("httpx")
 
 from fastapi.testclient import TestClient
 
+from app.config import settings
 from app.main import app
 from app.services import get_orchestrator
 from app.worker import process_one
@@ -54,7 +55,9 @@ def test_signal_is_accepted_and_run_is_pollable(client):
     assert done.json()["status"] in {"awaiting_human", "completed"}
 
 
-def test_sync_mode_returns_evidence_inline(client):
+def test_sync_mode_returns_evidence_inline(client, monkeypatch):
+    # This synthetic test explicitly opts into simulated approval.
+    monkeypatch.setattr(settings, "allow_simulated_review", True)
     resp = client.post("/signals?sync=true&auto_approve=true", json=SIGNAL, headers=HEADERS)
     assert resp.status_code == 200
     bundle = resp.json()
@@ -66,3 +69,12 @@ def test_unknown_signal_type_is_404(client):
     resp = client.post("/signals", json={**SIGNAL, "signal_type": "no_such_signal"},
                        headers=HEADERS)
     assert resp.status_code == 404
+
+
+@pytest.mark.parametrize("sync", ["false", "true"])
+def test_simulated_approval_is_disabled_by_default(client, monkeypatch, sync):
+    monkeypatch.setattr(settings, "allow_simulated_review", False)
+    resp = client.post(f"/signals?sync={sync}&auto_approve=true",
+                       json=SIGNAL, headers=HEADERS)
+    assert resp.status_code == 403
+    assert "Simulated review is disabled" in resp.json()["detail"]

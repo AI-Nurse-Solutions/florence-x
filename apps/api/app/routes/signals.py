@@ -11,6 +11,7 @@ from fastapi import APIRouter, HTTPException, Query, Response, status
 
 from florence_core.schemas import Signal
 
+from ..config import SimulatedReviewDisabled, settings
 from ..queue import SignalAccepted
 from ..services import get_orchestrator
 
@@ -21,12 +22,16 @@ router = APIRouter(tags=["signals"])
 def submit_signal(signal: Signal, response: Response,
                   sync: bool = Query(False, description="Run inline and return the EvidenceBundle."),
                   auto_approve: bool = Query(False)):
-    orch = get_orchestrator()
     try:
+        # Reject before constructing services or persisting/enqueuing a signal.
+        settings.check_auto_approval(auto_approve)
+        orch = get_orchestrator()
         if sync:
             response.status_code = status.HTTP_200_OK
             return orch.submit(signal, auto_approve=auto_approve)
         accepted: SignalAccepted = orch.enqueue(signal, auto_approve=auto_approve)
         return accepted
+    except SimulatedReviewDisabled as exc:
+        raise HTTPException(status_code=403, detail=str(exc)) from exc
     except KeyError as exc:
         raise HTTPException(status_code=404, detail=str(exc)) from exc

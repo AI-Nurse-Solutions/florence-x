@@ -1,7 +1,11 @@
 from __future__ import annotations
 
 import os
-from dataclasses import dataclass
+from dataclasses import dataclass, field
+
+
+class SimulatedReviewDisabled(PermissionError):
+    """A caller requested simulated approval without a server-side opt-in."""
 
 
 @dataclass
@@ -17,6 +21,19 @@ class Settings:
     # a postgres URL => durable, restart-safe checkpoints.
     runtime: str = os.getenv("FLORENCE_RUNTIME", "graph")
     langgraph_checkpoint: str = os.getenv("FLORENCE_LANGGRAPH_CHECKPOINT", "")
+    # Development demonstrations only. This never represents human approval or
+    # authorizes clinical use. A request/query parameter cannot enable it.
+    allow_simulated_review: bool = field(default_factory=lambda: (
+        os.getenv("FLORENCE_ALLOW_SIMULATED_REVIEW", "false").strip().lower() == "true"
+    ))
+
+    def check_auto_approval(self, auto_approve: bool) -> None:
+        """Deny simulated approval unless the server explicitly enabled it."""
+        if auto_approve and self.allow_simulated_review is not True:
+            raise SimulatedReviewDisabled(
+                "Simulated review is disabled on this server. "
+                "Submit without auto_approve to use policy-required human review."
+            )
 
 
 settings = Settings()
