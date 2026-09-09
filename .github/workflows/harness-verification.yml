@@ -25,7 +25,7 @@ jobs:
         image: redis:7
         ports: ['6379:6379']
         options: >-
-          --health-cmd 'redis-cli ping'
+          --health-cmd "redis-cli ping"
           --health-interval 5s
           --health-timeout 5s
           --health-retries 10
@@ -68,7 +68,6 @@ jobs:
         run: |
           python - <<'PY'
           import pathlib, subprocess, tempfile
-          root = pathlib.Path.cwd()
           evidence = pathlib.Path('/tmp/harness-evidence')
           baseline = subprocess.run(['ruff', 'check', '.', '--output-format=concise'], text=True, capture_output=True, check=False)
           (evidence / 'lint-before.txt').write_text(baseline.stdout + baseline.stderr)
