@@ -14,9 +14,8 @@ from __future__ import annotations
 
 from typing import Protocol
 
-from pydantic import BaseModel
-
 from florence_core.schemas import Signal
+from pydantic import BaseModel
 
 
 class SignalTask(BaseModel):

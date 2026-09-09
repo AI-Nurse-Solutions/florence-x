@@ -9,4 +9,4 @@ from .base import Connector
 from .fhir import FhirReadConnector
 from .gateway import GatewayResult, ToolBinding, ToolGateway
 
-__all__ = ["Connector", "FhirReadConnector", "ToolGateway", "ToolBinding", "GatewayResult"]
+__all__ = ["Connector", "FhirReadConnector", "GatewayResult", "ToolBinding", "ToolGateway"]

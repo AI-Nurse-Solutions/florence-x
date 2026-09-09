@@ -8,9 +8,9 @@ from .router import ModelRouter
 
 __all__ = [
     "ModelRouter",
-    "Redactor",
-    "redact",
     "OllamaAdapter",
-    "prepare_prompt",
     "PhiBoundaryViolation",
+    "Redactor",
+    "prepare_prompt",
+    "redact",
 ]

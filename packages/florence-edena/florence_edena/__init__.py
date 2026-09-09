@@ -18,6 +18,6 @@ __all__ = [
     "EDENADecision",
     "EdenaClient",
     "EdenaConfig",
-    "make_backend",
     "extract_risk_features",
+    "make_backend",
 ]

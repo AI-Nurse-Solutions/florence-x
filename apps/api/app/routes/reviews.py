@@ -8,7 +8,6 @@ an Incident.
 from __future__ import annotations
 
 from fastapi import APIRouter, HTTPException
-
 from florence_core.schemas import EvidenceBundle, Incident, PolicyPack
 
 from ..review import ReviewDecisionRequest, ReviewItem

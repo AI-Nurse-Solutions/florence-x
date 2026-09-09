@@ -7,7 +7,6 @@ RFC — these endpoints are read-only.
 from __future__ import annotations
 
 from fastapi import APIRouter
-
 from florence_core.schemas import AgentDefinition
 
 from ..services import get_orchestrator

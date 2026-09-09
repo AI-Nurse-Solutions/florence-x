@@ -17,7 +17,7 @@ jobs:
           POSTGRES_DB: florence_test
         ports: ['5432:5432']
         options: >-
-          --health-cmd pg_isready
+          --health-cmd "pg_isready -U florence_test -d florence_test"
           --health-interval 5s
           --health-timeout 5s
           --health-retries 10
@@ -48,7 +48,11 @@ jobs:
           pip install '.[api,dev]' 'ruff==0.16.6'
           mkdir -p /tmp/harness-evidence
           pip freeze > /tmp/harness-evidence/dependencies.txt
-      - name: Full unmodified test collection
+          python --version > /tmp/harness-evidence/tool-versions.txt
+          ruff --version >> /tmp/harness-evidence/tool-versions.txt
+          opa version >> /tmp/harness-evidence/tool-versions.txt
+          git rev-parse HEAD > /tmp/harness-evidence/tested-commit.txt
+      - name: Full test collection
         id: tests
         run: |
           set -o pipefail
@@ -58,32 +62,18 @@ jobs:
         run: |
           python - <<'PY'
           import json
+          from pathlib import Path
           from florence_core.schemas import CandidateAction, EDENADecision
           for name, model in [('candidate_action', CandidateAction), ('edena_decision', EDENADecision)]:
               assert json.load(open(f'schemas/{name}.schema.json')) == model.model_json_schema(), f'drift: {name}'
+          Path('/tmp/harness-evidence/schema.txt').write_text('no schema drift\n')
           print('no schema drift')
           PY
-      - name: Lint repair proposal in disposable worktree
+      - name: Repository lint (blocking, no automatic edits)
         if: ${{ !cancelled() && steps.install.outcome == 'success' }}
         run: |
-          python - <<'PY'
-          import pathlib, subprocess, tempfile
-          evidence = pathlib.Path('/tmp/harness-evidence')
-          baseline = subprocess.run(['ruff', 'check', '.', '--output-format=concise'], text=True, capture_output=True, check=False)
-          (evidence / 'lint-before.txt').write_text(baseline.stdout + baseline.stderr)
-          print('BASELINE LINT\n' + baseline.stdout)
-          with tempfile.TemporaryDirectory() as td:
-              subprocess.run(['git', 'worktree', 'add', '--detach', td, 'HEAD'], check=True, capture_output=True)
-              try:
-                  fixed = subprocess.run(['ruff', 'check', '--fix', '.', '--output-format=concise'], cwd=td, text=True, capture_output=True, check=False)
-                  print('REMAINING AFTER SAFE FIXES\n' + fixed.stdout)
-                  patch = subprocess.run(['git', 'diff', '--no-ext-diff', '--unified=2'], cwd=td, text=True, capture_output=True, check=True).stdout
-                  (evidence / 'safe-fixes.patch').write_text(patch)
-                  print('PROPOSED SAFE PATCH\n' + patch)
-              finally:
-                  subprocess.run(['git', 'worktree', 'remove', '--force', td], check=True)
-          raise SystemExit(baseline.returncode)
-          PY
+          set -o pipefail
+          ruff check . --output-format=concise 2>&1 | tee /tmp/harness-evidence/lint.txt
       - name: Preserve evidence even on failure
         if: ${{ !cancelled() && steps.install.outcome == 'success' }}
         uses: actions/upload-artifact@v4

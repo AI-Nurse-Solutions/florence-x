@@ -10,7 +10,6 @@ from __future__ import annotations
 import uuid
 
 from fastapi import APIRouter
-
 from florence_core.schemas import CandidateAction, EDENADecision
 from florence_edena.policy_adapters.local_rules import LocalRuleBackend
 from florence_edena.risk_features import extract_risk_features
