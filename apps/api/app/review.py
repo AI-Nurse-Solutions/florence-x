@@ -6,9 +6,8 @@ evidence, and EDENA's rationale — never a bare approve button.
 """
 from __future__ import annotations
 
-from pydantic import BaseModel
-
 from florence_core.schemas.enums import HumanReviewOutcome
+from pydantic import BaseModel
 
 
 class ReviewItem(BaseModel):

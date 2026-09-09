@@ -6,7 +6,6 @@ non-local routes are redacted and REFUSED if any PHI survives. Connectors return
 references, not raw narrative. (ASI06 Memory & Context Poisoning / data leakage.)
 """
 import pytest
-
 from florence_connectors import FhirReadConnector
 from florence_edena import EdenaClient
 from florence_model_router import (

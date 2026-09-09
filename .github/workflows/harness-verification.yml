@@ -1,0 +1,93 @@
+name: harness-verification
+on:
+  pull_request:
+permissions:
+  contents: read
+jobs:
+  full-suite:
+    if: github.head_ref == 'review/harness-initiation-2026-09-08'
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    services:
+      postgres:
+        image: postgres:16
+        env:
+          POSTGRES_USER: florence_test
+          POSTGRES_PASSWORD: ephemeral_ci_only
+          POSTGRES_DB: florence_test
+        ports: ['5432:5432']
+        options: >-
+          --health-cmd "pg_isready -U florence_test -d florence_test"
+          --health-interval 5s
+          --health-timeout 5s
+          --health-retries 10
+      redis:
+        image: redis:7
+        ports: ['6379:6379']
+        options: >-
+          --health-cmd "redis-cli ping"
+          --health-interval 5s
+          --health-timeout 5s
+          --health-retries 10
+    env:
+      FLORENCE_TEST_DATABASE_URL: postgresql+psycopg://florence_test:ephemeral_ci_only@localhost:5432/florence_test
+      FLORENCE_TEST_REDIS_URL: redis://localhost:6379/15
+      LANGCHAIN_TRACING_V2: 'false'
+      LANGSMITH_TRACING: 'false'
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+      - uses: actions/setup-python@v5
+        with: {python-version: '3.12'}
+      - uses: open-policy-agent/setup-opa@v2
+      - name: Install repository dependencies
+        id: install
+        run: |
+          pip install -e packages/florence-core -e packages/florence-edena -e packages/florence-connectors -e packages/florence-model-router -e packages/florence-cli
+          pip install '.[api,dev]' 'ruff==0.16.6'
+          mkdir -p /tmp/harness-evidence
+          pip freeze > /tmp/harness-evidence/dependencies.txt
+          python --version > /tmp/harness-evidence/tool-versions.txt
+          ruff --version >> /tmp/harness-evidence/tool-versions.txt
+          opa version >> /tmp/harness-evidence/tool-versions.txt
+          git rev-parse HEAD > /tmp/harness-evidence/tested-commit.txt
+          # Tracked public source only: no .git, credentials, runtime data, or workspace files.
+          git archive --format=tar HEAD > /tmp/harness-evidence/source.tar
+          git ls-tree -r HEAD > /tmp/harness-evidence/source-tree.txt
+      - name: Full test collection
+        id: tests
+        run: |
+          set -o pipefail
+          pytest -q -ra --junitxml=/tmp/harness-evidence/tests.xml 2>&1 | tee /tmp/harness-evidence/tests.txt
+      - name: Schema drift
+        if: ${{ !cancelled() && steps.install.outcome == 'success' }}
+        run: |
+          python - <<'PY'
+          import json
+          from pathlib import Path
+          from florence_core.schemas import CandidateAction, EDENADecision
+          for name, model in [('candidate_action', CandidateAction), ('edena_decision', EDENADecision)]:
+              assert json.load(open(f'schemas/{name}.schema.json')) == model.model_json_schema(), f'drift: {name}'
+          Path('/tmp/harness-evidence/schema.txt').write_text('no schema drift\n')
+          print('no schema drift')
+          PY
+      - name: Synthetic local HTTP loop (no external systems)
+        if: ${{ !cancelled() && steps.install.outcome == 'success' }}
+        run: |
+          set -o pipefail
+          mkdir -p .tooling/bin
+          cp "$(command -v opa)" .tooling/bin/opa
+          python scripts/e2e_live.py 2>&1 | tee /tmp/harness-evidence/e2e.txt
+      - name: Repository lint (blocking, no automatic edits)
+        if: ${{ !cancelled() && steps.install.outcome == 'success' }}
+        run: |
+          set -o pipefail
+          ruff check . --output-format=concise 2>&1 | tee /tmp/harness-evidence/lint.txt
+      - name: Preserve evidence even on failure
+        if: ${{ !cancelled() && steps.install.outcome == 'success' }}
+        uses: actions/upload-artifact@v4
+        with:
+          name: harness-verification-evidence
+          path: /tmp/harness-evidence
+          retention-days: 14

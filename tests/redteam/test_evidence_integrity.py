@@ -5,9 +5,6 @@ Invariants: every run yields an EvidenceBundle (even when blocked/paused);
 events, evidence, and incidents are append-only — a re-save with the same id
 never mutates the record. (ASI04 Agentic Supply Chain / audit integrity.)
 """
-from sqlalchemy import create_engine, func, select
-from sqlalchemy.orm import sessionmaker
-
 from app.db.event_sink import SqlAlchemyEventSink
 from app.db.models import Base, EventRow, EvidenceBundleRow
 from app.db.repository import PostgresRepository
@@ -16,6 +13,8 @@ from florence_core.schemas import EDENADecision, RequesterContext, Signal
 from florence_core.state import InMemoryRepository
 from florence_core.workflows import AutoApproveReviewer, Runtime, load_agent, load_workflow
 from florence_edena import EdenaClient
+from sqlalchemy import create_engine, func, select
+from sqlalchemy.orm import sessionmaker
 
 WF = "examples/icu_handoff/workflow.yaml"
 AG = "examples/icu_handoff/agent.yaml"

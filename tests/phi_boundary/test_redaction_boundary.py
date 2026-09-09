@@ -1,6 +1,5 @@
 """Phase 4B: redaction + the model PHI boundary — PHI never leaves local."""
 import pytest
-
 from florence_model_router import (
     ModelRouter,
     OllamaAdapter,

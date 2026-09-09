@@ -9,9 +9,6 @@ Postgres leg (skipped otherwise).
 import os
 
 import pytest
-from sqlalchemy import create_engine
-from sqlalchemy.orm import sessionmaker
-
 from app.db.models import Base
 from app.db.repository import PostgresRepository
 from florence_core.events import EventLog, NullSink
@@ -19,6 +16,8 @@ from florence_core.schemas import RequesterContext, Signal
 from florence_core.state import InMemoryRepository
 from florence_core.workflows import AutoApproveReviewer, Runtime, load_agent, load_workflow
 from florence_edena import EdenaClient
+from sqlalchemy import create_engine
+from sqlalchemy.orm import sessionmaker
 
 WF = "examples/icu_handoff/workflow.yaml"
 AG = "examples/icu_handoff/agent.yaml"

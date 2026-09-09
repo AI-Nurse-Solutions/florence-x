@@ -9,7 +9,6 @@ from __future__ import annotations
 
 from florence_core.schemas import CDSHookContext, RequesterContext, Signal
 
-
 # CDS service id -> (hook, signal_type, title).
 SERVICES: dict[str, tuple[str, str, str]] = {
     "florence-patient-education": ("patient-view", "patient_education_needed",

@@ -4,10 +4,11 @@ import pytest
 pytest.importorskip("fastapi")
 pytest.importorskip("httpx")
 
-from fastapi.testclient import TestClient
-
+from app.config import settings
 from app.main import app
 from app.services import get_orchestrator
+from fastapi import WebSocketDisconnect
+from fastapi.testclient import TestClient
 
 HEADERS = {"X-Florence-Identity": "nurse-123", "X-Florence-Role": "rn"}
 SIGNAL = {
@@ -26,7 +27,9 @@ def client():
         yield c
 
 
-def test_ws_streams_live_cloudevents(client):
+def test_ws_streams_live_cloudevents(client, monkeypatch):
+    # This synthetic test explicitly opts into simulated approval.
+    monkeypatch.setattr(settings, "allow_simulated_review", True)
     with client.websocket_connect("/events/ws?identity=nurse-123&role=rn") as ws:
         # Trigger a synchronous run; its events should arrive on the socket.
         resp = client.post("/signals?sync=true&auto_approve=true", json=SIGNAL, headers=HEADERS)
@@ -40,9 +43,12 @@ def test_ws_streams_live_cloudevents(client):
 
 
 def test_ws_requires_identity(client):
-    with pytest.raises(Exception):  # server closes the handshake (1008) without identity
-        with client.websocket_connect("/events/ws") as ws:
-            ws.receive_json()
+    with (
+        pytest.raises(WebSocketDisconnect) as closed,
+        client.websocket_connect("/events/ws") as ws,
+    ):
+        ws.receive_json()
+    assert closed.value.code == 1008
 
 
 def test_agents_registry_lists_registered_agents(client):

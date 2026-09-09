@@ -1,3 +1,5 @@
 from __future__ import annotations
+
 from .repository import InMemoryRepository, Repository
-__all__ = ["Repository", "InMemoryRepository"]
+
+__all__ = ["InMemoryRepository", "Repository"]

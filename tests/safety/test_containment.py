@@ -3,7 +3,6 @@ block (and record an Incident), escalate pauses for a human, throttle proceeds w
 constraints. Exercised against both the minimal and the durable runtimes.
 """
 import pytest
-
 from florence_core.events import EventLog, NullSink
 from florence_core.schemas import EDENADecision, RequesterContext, Signal
 from florence_core.state import InMemoryRepository

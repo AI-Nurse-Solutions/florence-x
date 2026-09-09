@@ -6,7 +6,11 @@ active OpenTelemetry span (when present), and reports whether the budget held.
 """
 from __future__ import annotations
 
+import logging
 import time
+from typing import Self
+
+log = logging.getLogger(__name__)
 
 # Point-of-care end-to-end target (upper bound of the 2–3s window).
 POINT_OF_CARE_BUDGET_MS = 3000
@@ -19,7 +23,7 @@ class LatencyBudget:
         self.elapsed_ms: float | None = None
         self._t0: float | None = None
 
-    def __enter__(self) -> "LatencyBudget":
+    def __enter__(self) -> Self:
         self._t0 = time.monotonic()
         return self
 
@@ -51,4 +55,5 @@ class LatencyBudget:
             span.set_attribute("florence.latency.budget_ms", self.budget_ms)
             span.set_attribute("florence.latency.within_budget", self.within_budget)
         except Exception:  # noqa: BLE001 - instrumentation must never break the path
-            pass
+            # Keep failure visible without logging labels, payloads, or exception text.
+            log.warning("Latency span annotation failed; workflow execution is unchanged")

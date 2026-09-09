@@ -1,13 +1,13 @@
 """P1-7 acceptance: a fresh database migrates clean and the resulting schema
 matches the SQLAlchemy models (no drift between models.py and the migration).
 """
+import logging
 from pathlib import Path
 
 from alembic import command
 from alembic.config import Config
-from sqlalchemy import create_engine, inspect
-
 from app.db.models import Base
+from sqlalchemy import create_engine, inspect
 
 API_DIR = Path(__file__).resolve().parents[2] / "apps" / "api"
 
@@ -43,3 +43,17 @@ def test_downgrade_to_base_is_reversible(tmp_path, monkeypatch):
     engine = create_engine(url, future=True)
     remaining = set(inspect(engine).get_table_names()) - {"alembic_version"}
     assert remaining == set(), f"tables left after downgrade: {remaining}"
+
+
+def test_migration_preserves_existing_application_logger(tmp_path, monkeypatch):
+    """An actual migration must not turn off an already-enabled service logger."""
+    url = f"sqlite:///{tmp_path / 'logging.db'}"
+    monkeypatch.setenv("FLORENCE_DATABASE_URL", url)
+    logger = logging.getLogger("florence.orchestrator")
+    monkeypatch.setattr(logger, "disabled", False)
+    monkeypatch.setattr(logger, "level", logging.WARNING)
+
+    command.upgrade(_alembic_config(url), "head")
+
+    assert logger.disabled is False
+    assert logger.isEnabledFor(logging.WARNING)

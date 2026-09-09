@@ -9,7 +9,6 @@ from __future__ import annotations
 import uuid
 
 from fastapi import APIRouter, HTTPException
-
 from florence_connectors.cds_hooks import discovery, signal_from_request
 from florence_connectors.smart import SmartLaunchContext
 from florence_connectors.smart import launch as build_launch_context

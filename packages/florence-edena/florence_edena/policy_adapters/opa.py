@@ -38,7 +38,7 @@ class OpaHttpBackend:
             self.url, data=body,
             headers={"Content-Type": "application/json"}, method="POST",
         )
-        with urllib.request.urlopen(req, timeout=self.timeout_s) as resp:  # noqa: S310 - configured URL
+        with urllib.request.urlopen(req, timeout=self.timeout_s) as resp:
             payload = json.loads(resp.read().decode("utf-8"))
         if "result" not in payload:
             # Undefined result => the policy produced no decision. Treat as an
@@ -58,7 +58,7 @@ class OpaBackend:
         proc = subprocess.run(
             ["opa", "eval", "--format", "json", "--data", str(self.policy_dir),
              "--stdin-input", self.query],
-            input=json.dumps(features), text=True, capture_output=True, timeout=5,
+            input=json.dumps(features), text=True, capture_output=True, timeout=5, check=False,
         )
         if proc.returncode != 0:
             raise RuntimeError(f"opa eval failed: {proc.stderr.strip()}")

@@ -10,9 +10,8 @@ import os
 from logging.config import fileConfig
 
 from alembic import context
-from sqlalchemy import engine_from_config, pool
-
 from app.db.models import Base
+from sqlalchemy import engine_from_config, pool
 
 config = context.config
 
@@ -21,7 +20,8 @@ _url = os.getenv("FLORENCE_DATABASE_URL") or config.get_main_option("sqlalchemy.
 config.set_main_option("sqlalchemy.url", _url)
 
 if config.config_file_name is not None:
-    fileConfig(config.config_file_name)
+    # In-process migrations must not disable the application's existing loggers.
+    fileConfig(config.config_file_name, disable_existing_loggers=False)
 
 target_metadata = Base.metadata
 

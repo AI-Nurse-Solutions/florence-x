@@ -9,8 +9,6 @@ import pytest
 pytest.importorskip("langgraph")
 pytest.importorskip("langgraph.checkpoint.sqlite")
 
-from langgraph.checkpoint.sqlite import SqliteSaver
-
 from florence_core.events import EventLog, NullSink
 from florence_core.schemas import HumanReview, RequesterContext, Signal
 from florence_core.schemas.enums import HumanReviewOutcome
@@ -18,6 +16,7 @@ from florence_core.state import InMemoryRepository
 from florence_core.workflows import QueueReviewer, load_agent, load_workflow
 from florence_core.workflows.graph_runtime import GraphRuntime
 from florence_edena import EdenaClient
+from langgraph.checkpoint.sqlite import SqliteSaver
 
 WF = "examples/icu_handoff/workflow.yaml"
 AG = "examples/icu_handoff/agent.yaml"
@@ -87,11 +86,10 @@ def test_resumed_evidence_records_the_review_on_a_durable_repo(tmp_path):
     """Regression (caught by the live e2e run): with an append-only durable repo,
     the partial pause-bundle must NOT shadow the final bundle — the persisted
     evidence at run.evidence_bundle_id must contain the human review."""
-    from sqlalchemy import create_engine
-    from sqlalchemy.orm import sessionmaker
-
     from app.db.models import Base
     from app.db.repository import PostgresRepository
+    from sqlalchemy import create_engine
+    from sqlalchemy.orm import sessionmaker
 
     engine = create_engine(f"sqlite:///{tmp_path / 'durable.db'}", future=True)
     Base.metadata.create_all(engine)

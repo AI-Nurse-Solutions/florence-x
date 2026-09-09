@@ -2,6 +2,7 @@
 from __future__ import annotations
 
 import glob
+import logging
 import uuid
 from functools import lru_cache
 from pathlib import Path
@@ -33,6 +34,8 @@ from ..db import make_event_sinks, make_repository
 from ..events_stream import BroadcastSink
 from ..queue import SignalAccepted, SignalTask, make_queue
 from ..review import ReviewDecisionRequest, ReviewItem
+
+log = logging.getLogger("florence.orchestrator")
 
 
 class OrchestratorService:
@@ -105,16 +108,19 @@ class OrchestratorService:
             try:
                 self.dispatcher.register(load_workflow(wf_path))
             except Exception:  # noqa: BLE001 - skip malformed examples at boot
+                log.warning("Skipped an invalid workflow example during startup")
                 continue
         for ag_path in glob.glob(str(examples_dir / "**" / "agent.yaml"), recursive=True):
             try:
                 a = load_agent(ag_path)
                 self.agents[a.agent_id] = a
             except Exception:  # noqa: BLE001
+                log.warning("Skipped an invalid agent example during startup")
                 continue
 
     def submit(self, signal: Signal, auto_approve: bool = False) -> EvidenceBundle:
         """Run the workflow synchronously and return the EvidenceBundle (sync path)."""
+        settings.check_auto_approval(auto_approve)
         workflow = self._select(signal)
         return self._runtime_for(auto_approve).run(workflow, signal)
 
@@ -124,6 +130,7 @@ class OrchestratorService:
         Validates a workflow exists, pre-allocates a pollable run in PENDING, then
         enqueues the task. The worker picks it up and runs it with that run_id.
         """
+        settings.check_auto_approval(auto_approve)
         self._select(signal)  # 404 early if no workflow handles this signal_type
         run_id = f"wfr_{uuid.uuid4().hex[:10]}"
         self.repo.save_signal(signal)
@@ -139,8 +146,16 @@ class OrchestratorService:
 
     def run_queued(self, task: SignalTask) -> EvidenceBundle:
         """Run a dequeued task against its pre-allocated run_id (worker path)."""
+        # Queue payloads carry a request, not authority. A worker may have a
+        # different configuration from the process that originally enqueued it.
+        auto_approve = task.auto_approve and settings.allow_simulated_review is True
+        if task.auto_approve and not auto_approve:
+            log.warning(
+                "Simulated review disabled for queued run %s; using policy-required human review",
+                task.workflow_run_id,
+            )
         workflow = self._select(task.signal)
-        return self._runtime_for(task.auto_approve).run(
+        return self._runtime_for(auto_approve).run(
             workflow, task.signal, run_id=task.workflow_run_id)
 
     def resume(self, run_id: str, review: HumanReview) -> EvidenceBundle:
@@ -216,6 +231,7 @@ class OrchestratorService:
         return workflow
 
     def _runtime_for(self, auto_approve: bool):
+        settings.check_auto_approval(auto_approve)
         reviewer = AutoApproveReviewer() if auto_approve else QueueReviewer()
         if self.runtime_kind == "graph":
             return self._graph_runtime(reviewer)

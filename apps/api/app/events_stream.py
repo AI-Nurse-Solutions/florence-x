@@ -13,8 +13,11 @@ requires a broker to exercise) and does not change the `/events/ws` contract.
 from __future__ import annotations
 
 import asyncio
+import logging
 
 from florence_core.events import CloudEvent
+
+log = logging.getLogger(__name__)
 
 
 class EventHub:
@@ -69,4 +72,5 @@ class BroadcastSink:
         try:
             self._hub.publish(event.to_dict())
         except Exception:  # noqa: BLE001
-            pass
+            # Do not expose event payloads or exception text in diagnostic logs.
+            log.warning("Live event broadcast failed; consult the durable event record")

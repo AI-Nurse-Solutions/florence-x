@@ -7,11 +7,10 @@ pytest.importorskip("fastapi")
 pytest.importorskip("httpx")
 pytest.importorskip("langgraph")
 
-from fastapi.testclient import TestClient
-
 from app.main import app
 from app.services import get_orchestrator
 from app.worker import process_one
+from fastapi.testclient import TestClient
 
 HEADERS = {"X-Florence-Identity": "nurse-123", "X-Florence-Role": "rn"}
 SIGNAL = {

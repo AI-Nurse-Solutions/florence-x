@@ -5,7 +5,7 @@ recoverable (restart-safe semantics).
 import os
 
 import pytest
-
+from app.config import settings
 from app.queue import SignalTask
 from app.queue.memory import InMemoryQueue
 from app.services.orchestrator import OrchestratorService
@@ -46,7 +46,9 @@ def test_unacked_task_is_recovered():
 
 
 # -- enqueue -> worker -> persisted run + evidence --------------------------
-def test_enqueue_then_worker_processes_to_evidence():
+def test_enqueue_then_worker_processes_to_evidence(monkeypatch):
+    # This synthetic workflow intentionally uses a simulated reviewer in this test only.
+    monkeypatch.setattr(settings, "allow_simulated_review", True)
     orch = OrchestratorService()  # in-memory repo + queue (no DB/Redis configured)
 
     accepted = orch.enqueue(_signal("s-flow"), auto_approve=True)

@@ -7,10 +7,19 @@ BUNDLE = "examples/_fixtures/fhir/synthetic_icu_patient_bundle.json"
 
 
 def _action(**kw):
-    base = dict(action_id="a", workflow_run_id="w", agent_id="ag", requester_role="rn",
-                action_type="retrieve", intended_target="fhir", data_classification="phi_local",
-                reversible=True, external_boundary_crossed=False, proposed_payload_hash="h",
-                tool_requested="fhir_read_patient_summary")
+    base = {
+        'action_id': 'a',
+        'workflow_run_id': 'w',
+        'agent_id': 'ag',
+        'requester_role': 'rn',
+        'action_type': 'retrieve',
+        'intended_target': 'fhir',
+        'data_classification': 'phi_local',
+        'reversible': True,
+        'external_boundary_crossed': False,
+        'proposed_payload_hash': 'h',
+        'tool_requested': 'fhir_read_patient_summary',
+    }
     base.update(kw)
     return CandidateAction(**base)
 

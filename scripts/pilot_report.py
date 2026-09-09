@@ -1,4 +1,3 @@
-#!/usr/bin/env python3
 """Pilot evidence report — the artifact a design partner takes to their stakeholders.
 
 Runs the MVP workflows through the governed runtime (synthetic data, local route)
@@ -18,8 +17,8 @@ from florence_core.observability import POINT_OF_CARE_BUDGET_MS, LatencyBudget
 from florence_core.schemas import EDENADecision, RequesterContext, Signal
 from florence_core.state import InMemoryRepository
 from florence_core.workflows import AutoApproveReviewer, Runtime, load_agent, load_workflow
-from florence_model_router import ModelRouter
 from florence_edena import EdenaClient
+from florence_model_router import ModelRouter
 
 ROOT = Path(__file__).resolve().parents[1]
 EXAMPLES = ROOT / "examples"
@@ -101,11 +100,11 @@ def main() -> int:
               "|---|---|---|---|---|---|"]
     lines += [f"| {w} | {', '.join(t) or '—'} | {fa} | {n} | {sc} | {lat} |"
               for (w, t, fa, n, sc, lat) in rows]
-    lines += ["", f"Containment scenario: {'✅' if refusal_ok else '❌'} a denied action was "
+    lines += ["", (f"Containment scenario: {'✅' if refusal_ok else '❌'} a denied action was "
               f"blocked and recorded incident `{incidents[0].incident_id if incidents else 'none'}` "
-              f"(triggered_by={incidents[0].triggered_by if incidents else 'n/a'}).",
-              "", f"Peak run latency: {round(max_latency,1)}ms "
-              f"(budget {POINT_OF_CARE_BUDGET_MS}ms).", "",
+              f"(triggered_by={incidents[0].triggered_by if incidents else 'n/a'})."),
+              "", (f"Peak run latency: {round(max_latency,1)}ms "
+              f"(budget {POINT_OF_CARE_BUDGET_MS}ms)."), "",
               f"**Overall: {'PASS — all acceptance gates met.' if passed else 'FAIL — see gates above.'}**"]
 
     report = "\n".join(lines) + "\n"

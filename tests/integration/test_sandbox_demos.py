@@ -3,19 +3,27 @@ gating, local model route only, no PHI leaving local. A2A handoffs are
 CandidateActions. Extends the PHI boundary per connector.
 """
 import pytest
-
 from florence_connectors.sandbox import build_sandbox_gateway
 from florence_core.schemas import CandidateAction
-from florence_model_router import ModelRouter
 from florence_edena import EdenaClient
+from florence_model_router import ModelRouter
 
 BUNDLE = "examples/_fixtures/fhir/synthetic_icu_patient_bundle.json"
 
 
 def _action(**kw):
-    base = dict(action_id="a", workflow_run_id="w", agent_id="ag", requester_role="rn",
-                action_type="retrieve", intended_target="t", data_classification="phi_local",
-                reversible=True, external_boundary_crossed=False, proposed_payload_hash="h")
+    base = {
+        'action_id': 'a',
+        'workflow_run_id': 'w',
+        'agent_id': 'ag',
+        'requester_role': 'rn',
+        'action_type': 'retrieve',
+        'intended_target': 't',
+        'data_classification': 'phi_local',
+        'reversible': True,
+        'external_boundary_crossed': False,
+        'proposed_payload_hash': 'h',
+    }
     base.update(kw)
     return CandidateAction(**base)
 
