@@ -8,7 +8,6 @@ invariant ↔ attack ↔ test matrix.
 from __future__ import annotations
 
 import pytest
-
 from florence_core.schemas import CandidateAction
 
 
@@ -16,11 +15,18 @@ from florence_core.schemas import CandidateAction
 def mk_action():
     """Build a CandidateAction with adversary-controllable fields overridable."""
     def _make(**kw) -> CandidateAction:
-        base = dict(
-            action_id="atk", workflow_run_id="w", agent_id="ag", requester_role="rn",
-            action_type="draft", intended_target="t", data_classification="phi_local",
-            reversible=True, external_boundary_crossed=False, proposed_payload_hash="h",
-        )
+        base = {
+            'action_id': 'atk',
+            'workflow_run_id': 'w',
+            'agent_id': 'ag',
+            'requester_role': 'rn',
+            'action_type': 'draft',
+            'intended_target': 't',
+            'data_classification': 'phi_local',
+            'reversible': True,
+            'external_boundary_crossed': False,
+            'proposed_payload_hash': 'h',
+        }
         base.update(kw)
         return CandidateAction(**base)
     return _make

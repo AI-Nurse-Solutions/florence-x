@@ -3,9 +3,18 @@ from florence_edena import EdenaClient
 
 
 def _action(**kw):
-    base = dict(action_id="a", workflow_run_id="w", agent_id="ag", requester_role="rn",
-                action_type="draft", intended_target="t", data_classification="phi_local",
-                reversible=True, external_boundary_crossed=False, proposed_payload_hash="h")
+    base = {
+        'action_id': 'a',
+        'workflow_run_id': 'w',
+        'agent_id': 'ag',
+        'requester_role': 'rn',
+        'action_type': 'draft',
+        'intended_target': 't',
+        'data_classification': 'phi_local',
+        'reversible': True,
+        'external_boundary_crossed': False,
+        'proposed_payload_hash': 'h',
+    }
     base.update(kw)
     return CandidateAction(**base)
 

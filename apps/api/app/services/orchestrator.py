@@ -108,12 +108,14 @@ class OrchestratorService:
             try:
                 self.dispatcher.register(load_workflow(wf_path))
             except Exception:  # noqa: BLE001 - skip malformed examples at boot
+                log.warning("Skipped an invalid workflow example during startup")
                 continue
         for ag_path in glob.glob(str(examples_dir / "**" / "agent.yaml"), recursive=True):
             try:
                 a = load_agent(ag_path)
                 self.agents[a.agent_id] = a
             except Exception:  # noqa: BLE001
+                log.warning("Skipped an invalid agent example during startup")
                 continue
 
     def submit(self, signal: Signal, auto_approve: bool = False) -> EvidenceBundle:

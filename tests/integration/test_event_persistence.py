@@ -1,9 +1,6 @@
 """P1-11 acceptance: events + evidence are persisted to append-only Postgres
 tables (in addition to JSONL), and rows are never UPDATEd in place.
 """
-from sqlalchemy import create_engine, func, select
-from sqlalchemy.orm import sessionmaker
-
 from app.db.event_sink import SqlAlchemyEventSink
 from app.db.models import Base, EventRow, EvidenceBundleRow
 from app.db.repository import PostgresRepository
@@ -11,6 +8,8 @@ from florence_core.events import EventLog, NullSink
 from florence_core.schemas import RequesterContext, Signal
 from florence_core.workflows import AutoApproveReviewer, Runtime, load_agent, load_workflow
 from florence_edena import EdenaClient
+from sqlalchemy import create_engine, func, select
+from sqlalchemy.orm import sessionmaker
 
 WF = "examples/icu_handoff/workflow.yaml"
 AG = "examples/icu_handoff/agent.yaml"
@@ -32,7 +31,7 @@ def _run(repo, events):
 
 
 def test_events_and_evidence_persisted(tmp_path):
-    factory, engine = _factory(tmp_path)
+    factory, _engine = _factory(tmp_path)
     repo = PostgresRepository(factory)
     events = EventLog(NullSink(), SqlAlchemyEventSink(factory))
 

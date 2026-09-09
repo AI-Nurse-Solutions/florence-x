@@ -28,6 +28,6 @@ class OllamaAdapter:
         req = urllib.request.Request(
             f"{self.host}/api/generate", data=body,
             headers={"Content-Type": "application/json"}, method="POST")
-        with urllib.request.urlopen(req, timeout=self.timeout_s) as resp:  # noqa: S310
+        with urllib.request.urlopen(req, timeout=self.timeout_s) as resp:
             payload = json.loads(resp.read().decode())
         return payload.get("response", "")

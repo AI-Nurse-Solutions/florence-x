@@ -8,15 +8,14 @@ import pytest
 
 pytest.importorskip("opentelemetry.sdk")
 
-from opentelemetry import trace
-from opentelemetry.sdk.trace import TracerProvider
-from opentelemetry.sdk.trace.export import SimpleSpanProcessor
-from opentelemetry.sdk.trace.export.in_memory_span_exporter import InMemorySpanExporter
-
 from florence_core.events import EventLog, NullSink
 from florence_core.schemas import RequesterContext, Signal
 from florence_core.workflows import AutoApproveReviewer, Runtime, load_agent, load_workflow
 from florence_edena import EdenaClient
+from opentelemetry import trace
+from opentelemetry.sdk.trace import TracerProvider
+from opentelemetry.sdk.trace.export import SimpleSpanProcessor
+from opentelemetry.sdk.trace.export.in_memory_span_exporter import InMemorySpanExporter
 
 WF = "examples/icu_handoff/workflow.yaml"
 AG = "examples/icu_handoff/agent.yaml"

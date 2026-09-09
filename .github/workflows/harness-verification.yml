@@ -72,6 +72,13 @@ jobs:
           Path('/tmp/harness-evidence/schema.txt').write_text('no schema drift\n')
           print('no schema drift')
           PY
+      - name: Synthetic local HTTP loop (no external systems)
+        if: ${{ !cancelled() && steps.install.outcome == 'success' }}
+        run: |
+          set -o pipefail
+          mkdir -p .tooling/bin
+          cp "$(command -v opa)" .tooling/bin/opa
+          python scripts/e2e_live.py 2>&1 | tee /tmp/harness-evidence/e2e.txt
       - name: Repository lint (blocking, no automatic edits)
         if: ${{ !cancelled() && steps.install.outcome == 'success' }}
         run: |

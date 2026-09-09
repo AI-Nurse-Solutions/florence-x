@@ -12,10 +12,9 @@ from __future__ import annotations
 
 from dataclasses import dataclass
 
-from pydantic import BaseModel
-
 from florence_core.schemas import CandidateAction
 from florence_core.schemas.enums import EdenaDecisionType
+from pydantic import BaseModel
 
 from .base import Connector
 

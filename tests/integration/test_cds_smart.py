@@ -4,10 +4,9 @@ import pytest
 pytest.importorskip("fastapi")
 pytest.importorskip("httpx")
 
-from fastapi.testclient import TestClient
-
 from app.main import app
 from app.services import get_orchestrator
+from fastapi.testclient import TestClient
 from florence_connectors.cds_hooks import signal_from_request
 
 HEADERS = {"X-Florence-Identity": "ehr-svc", "X-Florence-Role": "rn"}

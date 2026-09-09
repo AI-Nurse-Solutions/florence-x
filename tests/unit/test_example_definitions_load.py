@@ -6,7 +6,6 @@ This is the acceptance test for BUILD_PLAN.md task P0-8.
 from pathlib import Path
 
 import pytest
-
 from florence_core.workflows import load_agent, load_workflow
 
 EXAMPLES = Path(__file__).resolve().parents[2] / "examples"

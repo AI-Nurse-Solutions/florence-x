@@ -19,8 +19,6 @@ from __future__ import annotations
 
 from enum import Enum
 
-from sqlalchemy import select
-
 from florence_core.schemas import (
     CandidateAction,
     EDENADecision,
@@ -31,6 +29,7 @@ from florence_core.schemas import (
     Signal,
     WorkflowRun,
 )
+from sqlalchemy import select
 
 from .models import (
     CandidateActionRow,

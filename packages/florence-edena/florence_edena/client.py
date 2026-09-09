@@ -79,7 +79,7 @@ class EdenaClient:
                   backend=type(self.backend).__name__) as sp:
             try:
                 raw = self.backend.evaluate(features)
-            except Exception as exc:  # noqa: BLE001 - governance must never crash the loop
+            except Exception as exc:
                 if self.config.fail_closed:
                     fallback = _safe_fallback(action, f"backend error: {exc}")
                     set_attributes(sp, **{"edena.fail_closed": True,

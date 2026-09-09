@@ -1,4 +1,3 @@
-#!/usr/bin/env python3
 """Live end-to-end proof — the real stack, not mocks.
 
 Boots a real OPA policy server and the real FastAPI app (uvicorn) wired to:
@@ -72,7 +71,7 @@ def wait_for(url: str, timeout: float = 30.0) -> bool:
             with urllib.request.urlopen(url, timeout=1) as r:
                 if r.status == 200:
                     return True
-        except Exception:
+        except OSError:
             time.sleep(0.3)
     return False
 
@@ -124,7 +123,8 @@ def scenario_deny(api: str) -> None:
     check("run status is blocked", run.get("status") == "blocked")
     code, incidents = http("GET", f"{api}/incidents")
     mine = [i for i in incidents if i["workflow_run_id"] == run_id]
-    check("an Incident was created (refusal is a recorded success)", bool(mine) and mine[0]["triggered_by"] == "human_deny")
+    check("an Incident was created (refusal is a recorded success)",
+          code == 200 and bool(mine) and mine[0]["triggered_by"] == "human_deny")
 
 
 def main() -> int:
@@ -157,7 +157,7 @@ def main() -> int:
 
         # 2. migrate the real schema (Alembic)
         mig = subprocess.run([sys.executable, "-m", "alembic", "upgrade", "head"],
-                             cwd=ROOT / "apps" / "api", env=env, capture_output=True, text=True)
+                             cwd=ROOT / "apps" / "api", env=env, capture_output=True, text=True, check=False)
         check("Alembic migrated a fresh database", mig.returncode == 0, mig.stderr.strip().splitlines()[-1] if mig.returncode else "")
 
         # 3. the real FastAPI app under uvicorn
@@ -184,8 +184,9 @@ def main() -> int:
         for p in procs:
             try:
                 p.wait(timeout=5)
-            except Exception:
+            except subprocess.TimeoutExpired:
                 p.kill()
+                p.wait(timeout=5)
         shutil.rmtree(tmp, ignore_errors=True)
 
     print(f"\n{'='*60}\n  RESULT: {_passed} passed, {_failed} failed\n{'='*60}")
