@@ -9,12 +9,11 @@ from types import SimpleNamespace
 from unittest.mock import Mock
 
 import pytest
-from fastapi import HTTPException, Response
-
 from app.config import Settings, SimulatedReviewDisabled, settings
 from app.routes import signals
 from app.services import orchestrator as orchestrator_module
 from app.services.orchestrator import OrchestratorService
+from fastapi import HTTPException, Response
 
 
 @pytest.fixture(autouse=True)

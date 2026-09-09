@@ -8,7 +8,6 @@ governed workflow. Pass `sync=true` to run inline and get the EvidenceBundle bac
 from __future__ import annotations
 
 from fastapi import APIRouter, HTTPException, Query, Response, status
-
 from florence_core.schemas import Signal
 
 from ..config import SimulatedReviewDisabled, settings

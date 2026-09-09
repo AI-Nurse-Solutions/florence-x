@@ -35,7 +35,6 @@ from ..events_stream import BroadcastSink
 from ..queue import SignalAccepted, SignalTask, make_queue
 from ..review import ReviewDecisionRequest, ReviewItem
 
-
 log = logging.getLogger("florence.orchestrator")
 
 
