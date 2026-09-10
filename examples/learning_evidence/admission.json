@@ -1,0 +1,9 @@
+{
+  "pack_id": "public-ai-resource-review",
+  "version": "0.1.0",
+  "mission_id": "mission.public-learning.0001",
+  "mission_sha256": "e3cf03292e21a46b5a3f6297b29da8354e087473995084abe8b9150106e50072",
+  "data_classification": "public",
+  "purpose": "professional_learning",
+  "raw_sha256": "056b983bf1350276fad17d006290db36c4c69c9a51b031cc246c99eabffc5f12"
+}
