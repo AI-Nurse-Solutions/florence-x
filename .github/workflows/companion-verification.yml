@@ -81,6 +81,14 @@ jobs:
           set -o pipefail
           python scripts/build_hermes_companion.py --output /tmp/ss04-evidence/companion
           node --experimental-vm-modules tests/javascript/test_hermes_companion.cjs /tmp/ss04-evidence/companion/plugin.js 2>&1 | tee /tmp/ss04-evidence/companion-js.txt
+      - name: Browser boundary verification (blocking; synthetic offline inputs)
+        if: ${{ !cancelled() && steps.install.outcome == 'success' }}
+        run: |
+          set -o pipefail
+          pip install 'playwright==1.57.0'
+          python -m playwright install --with-deps chromium
+          pip freeze > /tmp/ss04-evidence/dependencies-with-browser.txt
+          python tests/browser/verify_hermes_companion.py /tmp/ss04-evidence/companion/preview.html /tmp/ss04-evidence/browser 2>&1 | tee /tmp/ss04-evidence/browser.txt
       - name: Derived workspace snapshot
         if: ${{ !cancelled() && steps.install.outcome == 'success' }}
         run: python scripts/build_learning_workspace.py --check

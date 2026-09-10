@@ -47,7 +47,7 @@ def inspect_inputs(assessment: dict, raw: bytes) -> str:
         if not isinstance(raw, bytes) or not 0 < len(raw) <= 180_000 or sha(raw) != w['sha256']:
             raise ValueError(ERROR)
         text = raw.decode('utf-8')
-        match = re.search(r'<script type="application/json" id="bundle">(.*?)</script>', text, re.S)
+        match = re.search(r'<script type="application/json" id="bundle">(.*?)</script>', text, re.DOTALL)
         data = json.loads(match.group(1), object_pairs_hook=_unique)
         mission = data['bundle']['mission']
         if (mission['mission_id'], mission['origin'], mission['data_classification']) != (
@@ -56,7 +56,7 @@ def inspect_inputs(assessment: dict, raw: bytes) -> str:
         if "connect-src 'none'" not in text or "form-action 'none'" not in text:
             raise ValueError(ERROR)
         for tag in ('script', 'style'):
-            body = re.search(r'<' + tag + r'>(.*?)</' + tag + r'>', text, re.S).group(1)
+            body = re.search(r'<' + tag + r'>(.*?)</' + tag + r'>', text, re.DOTALL).group(1)
             digest = base64.b64encode(hashlib.sha256(body.encode()).digest()).decode()
             if "'sha256-" + digest + "'" not in text:
                 raise ValueError(ERROR)

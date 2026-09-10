@@ -1,6 +1,6 @@
 # Nurse AI OS learning companion — review candidate
 
-**Do not install this candidate yet.** SS-04A provides a pinned interface assessment and a presentation-only prototype. The browser isolation verifier is incomplete, native Hermes has not been tested, and review/release gates are open.
+**Do not install this candidate yet.** SS-04A provides a pinned interface assessment and a presentation-only prototype. The SS-04B verifier now observes blocked navigation and explicit reload separately. Native Hermes has not been tested, and review/release gates remain open.
 
 Build for inspection from the repository root:
 
@@ -24,6 +24,6 @@ node --experimental-vm-modules tests/javascript/test_hermes_companion.cjs /tmp/n
 python tests/browser/verify_hermes_companion.py /tmp/naio-companion-review/preview.html /tmp/naio-companion-browser
 ```
 
-The Node host and JSX module are explicit test substitutes, not native-host verification. The last browser command reproduces an outstanding navigation/context-reset failure; it is not a release test that passed. It requires the existing Playwright/Chromium test setup. Do not disable browser security policy to make a test pass.
+The Node host and JSX module are explicit test substitutes, not native-host verification. The browser command checks the fixed frame in Chromium, not native Hermes. It uses an existing Chromium executable or the installed Playwright browser; pass --chromium for an explicit path. A rejected synthetic form navigation can replace the workbench with a browser error page and discard unsaved practice. The test waits for that outcome before asserting no observed requests, then explicitly reloads the fixed preview and confirms cleared practice. It does not implement automatic recovery or durable saving. Failed checks are recorded and re-raised. Do not disable browser security policy to make a test pass.
 
 See `assessment.json` and `docs/rfcs/ss04a-hermes-presentation-boundary.md` for inspected interfaces, separate rights, authority limits, findings, failure history and next gates.
