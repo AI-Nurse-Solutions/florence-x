@@ -11,7 +11,7 @@ from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(ROOT / "packages/florence-core"))
-from florence_core.schemas.mission import mission_digest, parse_workspace  # noqa: E402
+from florence_core.schemas.mission import mission_digest, parse_workspace
 
 
 def render() -> str:
@@ -20,7 +20,7 @@ def render() -> str:
     html = (ROOT / "apps/learning-workspace/index.template.html").read_text(encoding="utf-8")
     html = html.replace("__DATA__", json.dumps(data, ensure_ascii=False).replace("<", "\\u003c"))
     for kind, placeholder in (("script", "__SCRIPT_HASH__"), ("style", "__STYLE_HASH__")):
-        code = re.search(r"<" + kind + r">(.*?)</" + kind + r">", html, flags=re.S).group(1)
+        code = re.search(r"<" + kind + r">(.*?)</" + kind + r">", html, flags=re.DOTALL).group(1)
         digest = base64.b64encode(hashlib.sha256(code.encode("utf-8")).digest()).decode("ascii")
         html = html.replace(placeholder, digest)
     return html

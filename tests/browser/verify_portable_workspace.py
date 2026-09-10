@@ -84,10 +84,10 @@ with sync_playwright() as p:
     ok("390px viewport keeps the goal readable without horizontal overflow")
     assert not requests, requests
     ok("Rendering and all preview interactions issue zero network requests")
-    payload = json.loads(re.search(r'<script type="application/json" id="bundle">(.*?)</script>', html, re.S).group(1))
+    payload = json.loads(re.search(r'<script type="application/json" id="bundle">(.*?)</script>', html, re.DOTALL).group(1))
     payload["bundle"]["mission"]["goal"] = '<img src="unapproved.invalid" onerror="alert(1)">'
     hostile = re.sub(r'(<script type="application/json" id="bundle">).*?(</script>)',
-                     lambda m: m.group(1) + json.dumps(payload).replace("<", "\\u003c") + m.group(2), html, flags=re.S)
+                     lambda m: m.group(1) + json.dumps(payload).replace("<", "\\u003c") + m.group(2), html, flags=re.DOTALL)
     page.set_content(hostile, wait_until="load")
     assert page.locator("#goal img").count() == 0
     assert page.locator("#goal").inner_text().startswith("<img")
