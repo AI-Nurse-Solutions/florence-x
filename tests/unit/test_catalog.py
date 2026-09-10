@@ -243,7 +243,7 @@ def test_ambiguous_reviews_fail(data, changes):
 
 def test_naive_inspection_time_rejected(data):
     with pytest.raises(ValueError, match="timezone-aware"):
-        inspect(data, datetime(2026, 9, 9))
+        inspect(data, AT.replace(tzinfo=None))
 
 
 def test_content_integrity_uses_supplied_bytes(data):
