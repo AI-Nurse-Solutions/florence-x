@@ -11,7 +11,6 @@ import pytest
 from florence_core.schemas.inference import (
     ERROR,
     InferenceRequest,
-    OfflineAdmission,
     fingerprint,
     parse_record,
 )

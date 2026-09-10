@@ -3,7 +3,7 @@ from __future__ import annotations
 
 import hashlib
 import json
-from typing import Annotated, Literal, Self, TypeVar
+from typing import Annotated, Literal, Self
 
 from pydantic import AwareDatetime, Field, StringConstraints, model_validator
 
@@ -14,7 +14,6 @@ Count = Annotated[int, Field(strict=True, ge=0, le=1000000)]
 Feature = Literal["text", "structured_output", "tool_proposals", "image_input", "streaming"]
 Placement = Literal["device", "personal_cloud", "external_provider"]
 ERROR = "Invalid offline inference record; no model or network operation performed."
-T = TypeVar("T", bound=CatalogRecord)
 
 
 def fingerprint(record: CatalogRecord) -> str:
@@ -37,7 +36,7 @@ def _constant(_):
     raise ValueError(ERROR)
 
 
-def parse_record(raw: bytes, model: type[T]) -> T:
+def parse_record[T: CatalogRecord](raw: bytes, model: type[T]) -> T:
     """Bounded, duplicate-key rejecting entrypoint with input-free errors."""
     try:
         if type(raw) is not bytes or not 0 < len(raw) <= 65536:

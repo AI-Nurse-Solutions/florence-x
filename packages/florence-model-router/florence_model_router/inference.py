@@ -138,9 +138,9 @@ def replay_inference(request: InferenceRequest, profiles: tuple[FixtureModelProf
     """
     request = _validated(request, InferenceRequest)
     plan = plan_inference(request, profiles, admission, now=now)
-    common = dict(request_sha256=plan.request_sha256, mission_sha256=request.mission_sha256,
-                  profile_sha256=plan.selected_profile_sha256,
-                  attempts=1 if plan.status == "eligible_fixture" else 0)
+    common = {"request_sha256": plan.request_sha256, "mission_sha256": request.mission_sha256,
+              "profile_sha256": plan.selected_profile_sha256,
+              "attempts": 1 if plan.status == "eligible_fixture" else 0}
 
     def stopped(outcome, usage=None):
         return InferenceResult(**common, outcome=outcome, usage=usage, next_action="stop_no_fallback")

@@ -19,7 +19,11 @@ for package in ("florence-core", "florence-model-router"):
     sys.path.insert(0, str(ROOT / "packages" / package))
 from florence_core.schemas.deliberation import parse_pack
 from florence_core.schemas.inference import (
-    ContextSpan, FixtureModelProfile, InferenceRequest, OfflineAdmission, fingerprint,
+    ContextSpan,
+    FixtureModelProfile,
+    InferenceRequest,
+    OfflineAdmission,
+    fingerprint,
 )
 from florence_core.schemas.learning_evidence import EvidenceRequest, PackAdmission, load_admitted_evidence
 from florence_model_router import ModelRouter
