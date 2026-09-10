@@ -8,7 +8,7 @@ import socket
 from pathlib import Path
 
 import pytest
-from florence_core.schemas.inference import InferenceRequest, fingerprint
+from florence_core.schemas.inference import fingerprint
 from florence_core.schemas.provider_codec import ProviderCodecSpec
 from florence_model_router.provider_codecs import ERROR, decode_fixture, prepare_request, proposal_schema
 

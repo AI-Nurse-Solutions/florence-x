@@ -7,15 +7,17 @@ import copy
 import hashlib
 import html
 import json
+import sys
 from pathlib import Path
 
-from model_contract_demo import demo_inputs
+ROOT = Path(__file__).resolve().parents[1]
+for package in ("florence-core", "florence-model-router"):
+    sys.path.insert(0, str(ROOT / "packages" / package))
 
 from florence_core.schemas.inference import fingerprint
 from florence_core.schemas.provider_codec import ProviderCodecSpec
 from florence_model_router.provider_codecs import decode_fixture, prepare_request
-
-ROOT = Path(__file__).resolve().parents[1]
+from model_contract_demo import demo_inputs
 
 
 def evaluate():
