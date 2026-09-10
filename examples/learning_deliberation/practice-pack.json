@@ -1,0 +1,85 @@
+{
+  "schema_version": "0.1.0",
+  "pack_id": "learner-first-practice",
+  "version": "0.1.0",
+  "mission_id": "mission.public-learning.0001",
+  "mission_sha256": "e3cf03292e21a46b5a3f6297b29da8354e087473995084abe8b9150106e50072",
+  "evidence_pack_id": "public-ai-resource-review",
+  "evidence_version": "0.1.0",
+  "evidence_raw_sha256": "056b983bf1350276fad17d006290db36c4c69c9a51b031cc246c99eabffc5f12",
+  "data_classification": "public",
+  "cases": [
+    {
+      "case_id": "case.scope",
+      "version": "0.1.0",
+      "kind": "omission",
+      "title": "Case A · A resource ready to rely on?",
+      "question": "A public AI-learning guide is presented as ready to rely on. What would you examine before accepting that conclusion?",
+      "observations": [
+        "Synthetic review context: the guide is readable and names its sources.",
+        "The supplied source pack is small; no nurse walkthrough of this workspace has been observed."
+      ],
+      "proposal": "The guide is ready to rely on because its citations resolve and its writing is clear.",
+      "passage_ids": [
+        "nist-scope",
+        "prov-lineage"
+      ],
+      "limitations": [
+        "Prepared practice proposal; it may omit material limitations.",
+        "No automatic check of claim support or learning effectiveness has been performed."
+      ],
+      "proposal_disclosure": "prepared_ai_assisted_fixture_not_live_model",
+      "origin": "synthetic_fixture"
+    },
+    {
+      "case_id": "case.tradeoff",
+      "version": "0.1.0",
+      "kind": "competing_findings",
+      "title": "Case B · Findings that pull in different directions",
+      "question": "How would you weigh a promising evaluation result against learner burden when choosing the next prototype design?",
+      "observations": [
+        "Synthetic usability note, not a research result: one fictional learner reports that repeated forms interrupt their learning.",
+        "The fixed research excerpt reports reduced overreliance in its study; its full methods and applicability to nurses have not been appraised here."
+      ],
+      "proposal": "Require a long written explanation before every AI suggestion; the study excerpt settles the design choice.",
+      "passage_ids": [
+        "forcing-study",
+        "nist-scope"
+      ],
+      "limitations": [
+        "The usability note is fictional; no real user feedback is claimed.",
+        "The tension is an authored learning exercise, not two conflicting clinical studies."
+      ],
+      "proposal_disclosure": "prepared_ai_assisted_fixture_not_live_model",
+      "origin": "synthetic_fixture"
+    },
+    {
+      "case_id": "case.certainty",
+      "version": "0.1.0",
+      "kind": "unsupported_certainty",
+      "title": "Case C · A confident assurance claim",
+      "question": "Which evidence would justify or undermine a strong assurance claim about this learning workspace?",
+      "observations": [
+        "Synthetic review context: software checks have exercised defined code paths.",
+        "Professional review, nurse learning outcomes and secure deployment have not been established for this exercise."
+      ],
+      "proposal": "The workspace has passed software tests, so its educational effectiveness and clinical safety are guaranteed. Further human review is unnecessary.",
+      "passage_ids": [
+        "nist-scope",
+        "forcing-study"
+      ],
+      "limitations": [
+        "Deliberately persuasive practice text, not a real recommendation or assurance statement.",
+        "Test results alone do not supply the missing outcomes or authorization."
+      ],
+      "proposal_disclosure": "prepared_ai_assisted_fixture_not_live_model",
+      "origin": "synthetic_fixture"
+    }
+  ],
+  "limitations": [
+    "Synthetic nonclinical exercises only; proposals are prepared AI-assisted fixtures, not live model outputs.",
+    "The supplied source excerpts and their appraisal limitations are unchanged from SS-02.",
+    "No human understanding, reduced overreliance, competence or clinical outcome has been measured.",
+    "Practice records are temporary browser memory; nothing is authenticated, saved, submitted or authorized."
+  ]
+}

@@ -13,6 +13,7 @@ from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(ROOT / "packages/florence-core"))
+from florence_core.schemas.deliberation import digest_record, parse_pack
 from florence_core.schemas.learning_evidence import (
     EvidenceRequest,
     PackAdmission,
@@ -44,8 +45,24 @@ def render() -> str:
         changed = copy.deepcopy(pack.model_dump(mode="json"))
         changed["claims"][0]["citations"][0][field] = value
         data["evidence_scenarios"][scenario] = inspect_evidence(changed, as_of=as_of)["claims"][0]
+    practice = parse_pack((ROOT / "examples/learning_deliberation/practice-pack.json").read_bytes())
+    if (practice.mission_id, practice.mission_sha256, practice.evidence_pack_id,
+            practice.evidence_version, practice.evidence_raw_sha256) != (
+            request.mission_id, request.mission_sha256, admission.pack_id,
+            admission.version, admission.raw_sha256):
+        raise ValueError("Practice pack does not bind the admitted mission and evidence.")
+    passage_ids = {p.passage_id for p in pack.passages}
+    if any(pid not in passage_ids for case in practice.cases for pid in case.passage_ids):
+        raise ValueError("Unknown practice passage.")
+    data["deliberation"] = {"pack": practice.model_dump(mode="json"),
+                            "pack_sha256": digest_record(practice),
+                            "case_digests": {c.case_id: digest_record(c) for c in practice.cases}}
     html = (ROOT / "apps/learning-workspace/index.template.html").read_text(encoding="utf-8")
     html = html.replace("__DATA__", json.dumps(data, ensure_ascii=False).replace("<", "\\u003c"))
+    html = html.replace("__DELIBERATION_ENGINE__",
+                        (ROOT / "apps/learning-workspace/deliberation.js").read_text(encoding="utf-8"))
+    html = html.replace("__DELIBERATION_UI__",
+                        (ROOT / "apps/learning-workspace/deliberation-ui.js").read_text(encoding="utf-8"))
     for kind, placeholder in (("script", "__SCRIPT_HASH__"), ("style", "__STYLE_HASH__")):
         code = re.search(r"<" + kind + r">(.*?)</" + kind + r">", html, flags=re.DOTALL).group(1)
         digest = base64.b64encode(hashlib.sha256(code.encode("utf-8")).digest()).decode("ascii")
