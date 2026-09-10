@@ -1,0 +1,244 @@
+{
+  "schema_version": "0.1.0",
+  "pack_id": "public-ai-resource-review",
+  "version": "0.1.0",
+  "mission_id": "mission.public-learning.0001",
+  "mission_sha256": "e3cf03292e21a46b5a3f6297b29da8354e087473995084abe8b9150106e50072",
+  "data_classification": "public",
+  "purpose": "professional_learning",
+  "primary_pillar": "knowledge",
+  "pillar_dependencies": [
+    "judgment",
+    "capability",
+    "contribution"
+  ],
+  "passages": [
+    {
+      "passage_id": "nist-scope",
+      "source": {
+        "source_id": "nist-ai-rmf-core",
+        "revision": "AI RMF 1.0 (2023); AIRC HTML excerpt captured 2026-09-09",
+        "content_sha256": "874c7b9906a68b47855b5b007f537ac9af77b661313a55d54f69221e06ba02e6",
+        "locator": "https://airc.nist.gov/airmf-resources/airmf/5-sec-core/ | Section 5.3, Table 3, MEASURE 2.5, second sentence",
+        "origin": "public_source",
+        "data_classification": "public",
+        "applicability": "Professional learning about AI-generated resources; no patient-specific guidance."
+      },
+      "title": "Document where the evidence stops",
+      "attribution": "National Institute of Standards and Technology, AI RMF 1.0, MEASURE 2.5.",
+      "kind": "guidance",
+      "quote": "Limitations of the generalizability beyond the conditions under which the technology was developed are documented.",
+      "hash_scope": "quoted_excerpt_utf8",
+      "captured_at": "2026-09-09T21:48:24-07:00",
+      "review_due_at": "2026-12-09T22:00:00-08:00",
+      "rights_note": "Short attributed quotation from NIST guidance. No third-party figures reproduced; this pack is not NIST-endorsed.",
+      "inspection_scope": "Official AIRC HTML, MEASURE 2.5 and surrounding table read. Snapshot pins the excerpt, not the entire page.",
+      "limitations": [
+        "Guidance about AI risk management, not an experimental result or nursing education outcome.",
+        "This excerpt does not establish the suitability of any particular model or resource."
+      ]
+    },
+    {
+      "passage_id": "prov-lineage",
+      "source": {
+        "source_id": "w3c-prov-o-2013",
+        "revision": "W3C Recommendation 2013-04-30",
+        "content_sha256": "356c9d3eeb5da1ebcded6701536acba21803ad85d8cb6d43310b29ef60547f06",
+        "locator": "https://www.w3.org/TR/2013/REC-prov-o-20130430/ | Section 3.1, paragraph beginning Activities start and end",
+        "origin": "public_source",
+        "data_classification": "public",
+        "applicability": "Professional learning about AI-generated resources; no patient-specific guidance."
+      },
+      "title": "Trace a resource to its inputs",
+      "attribution": "Timothy Lebo, Satya Sahoo and Deborah McGuinness (editors), PROV-O: The PROV Ontology, W3C Recommendation, 30 April 2013.",
+      "kind": "standard",
+      "quote": "By expressing usage and generation, one can construct provenance chains comprising both Activities and Entities.",
+      "hash_scope": "quoted_excerpt_utf8",
+      "captured_at": "2026-09-09T21:48:24-07:00",
+      "review_due_at": "2026-12-09T22:00:00-08:00",
+      "rights_note": "Copyright 2011–2013 W3C (MIT, ERCIM, Keio, Beihang). Short attributed excerpt; W3C document-use rules apply. No figures reproduced.",
+      "inspection_scope": "Dated W3C recommendation: section 3.1 and surrounding definitions read. No claim of implementing PROV-O conformance.",
+      "limitations": [
+        "A provenance chain records relationships; it is not evidence that a claim is correct.",
+        "This standard does not certify a reviewer, practitioner or Nurse AI OS."
+      ]
+    },
+    {
+      "passage_id": "forcing-study",
+      "source": {
+        "source_id": "bucinca-2021-v1",
+        "revision": "arXiv:2102.09692v1, 2021-02-19",
+        "content_sha256": "efba7c7e3dc2bf5eef4013f86c998c54730434fbb03d8ae5c5efdfddca941720",
+        "locator": "https://arxiv.org/abs/2102.09692v1 | Abstract, paragraph beginning We conducted an experiment",
+        "origin": "public_source",
+        "data_classification": "public",
+        "applicability": "Professional learning about AI-generated resources; no patient-specific guidance."
+      },
+      "title": "More explanation is not the same as better judgment",
+      "attribution": "Zana Buçinca, Maja Barbara Malaya and Krzysztof Z. Gajos (2021), To Trust or to Think. arXiv:2102.09692v1; related publication DOI 10.1145/3449287.",
+      "kind": "research_abstract",
+      "quote": "The results demonstrate that cognitive forcing significantly reduced overreliance compared to the simple explainable AI approaches.",
+      "hash_scope": "quoted_excerpt_utf8",
+      "captured_at": "2026-09-09T21:48:24-07:00",
+      "review_due_at": "2026-12-09T22:00:00-08:00",
+      "rights_note": "arXiv v1 links to CC BY 4.0 (https://creativecommons.org/licenses/by/4.0/). Authors credited; quote unchanged. Adjacent summaries are AI-assisted paraphrases.",
+      "inspection_scope": "Versioned author abstract and license link inspected, not the full methods or a critical appraisal.",
+      "limitations": [
+        "The abstract reports an experiment with 199 participants, not an evaluation of Nurse AI OS or nurse competence.",
+        "The same abstract reports less favorable subjective ratings for the most effective designs and unequal benefit by Need for Cognition."
+      ]
+    }
+  ],
+  "claims": [
+    {
+      "claim_id": "quote-nist-scope",
+      "kind": "retrieved_evidence",
+      "statement": "Limitations of the generalizability beyond the conditions under which the technology was developed are documented.",
+      "citations": [
+        {
+          "source_id": "nist-ai-rmf-core",
+          "passage": "nist-scope",
+          "expected_revision": "AI RMF 1.0 (2023); AIRC HTML excerpt captured 2026-09-09",
+          "expected_excerpt_sha256": "874c7b9906a68b47855b5b007f537ac9af77b661313a55d54f69221e06ba02e6"
+        }
+      ],
+      "limitation": "Exact excerpt comparison only. Read its source context; semantic truth is not automatically verified."
+    },
+    {
+      "claim_id": "quote-prov-lineage",
+      "kind": "retrieved_evidence",
+      "statement": "By expressing usage and generation, one can construct provenance chains comprising both Activities and Entities.",
+      "citations": [
+        {
+          "source_id": "w3c-prov-o-2013",
+          "passage": "prov-lineage",
+          "expected_revision": "W3C Recommendation 2013-04-30",
+          "expected_excerpt_sha256": "356c9d3eeb5da1ebcded6701536acba21803ad85d8cb6d43310b29ef60547f06"
+        }
+      ],
+      "limitation": "Exact excerpt comparison only. Read its source context; semantic truth is not automatically verified."
+    },
+    {
+      "claim_id": "quote-forcing-study",
+      "kind": "retrieved_evidence",
+      "statement": "The results demonstrate that cognitive forcing significantly reduced overreliance compared to the simple explainable AI approaches.",
+      "citations": [
+        {
+          "source_id": "bucinca-2021-v1",
+          "passage": "forcing-study",
+          "expected_revision": "arXiv:2102.09692v1, 2021-02-19",
+          "expected_excerpt_sha256": "efba7c7e3dc2bf5eef4013f86c998c54730434fbb03d8ae5c5efdfddca941720"
+        }
+      ],
+      "limitation": "Exact excerpt comparison only. Read its source context; semantic truth is not automatically verified."
+    },
+    {
+      "claim_id": "synthesis-check",
+      "kind": "generated_synthesis",
+      "statement": "Inspect a resource’s origin and the conditions in which its underlying system was evaluated before deciding whether to rely on it.",
+      "citations": [
+        {
+          "source_id": "nist-ai-rmf-core",
+          "passage": "nist-scope",
+          "expected_revision": "AI RMF 1.0 (2023); AIRC HTML excerpt captured 2026-09-09",
+          "expected_excerpt_sha256": "874c7b9906a68b47855b5b007f537ac9af77b661313a55d54f69221e06ba02e6"
+        },
+        {
+          "source_id": "w3c-prov-o-2013",
+          "passage": "prov-lineage",
+          "expected_revision": "W3C Recommendation 2013-04-30",
+          "expected_excerpt_sha256": "356c9d3eeb5da1ebcded6701536acba21803ad85d8cb6d43310b29ef60547f06"
+        }
+      ],
+      "limitation": "AI-assisted learning synthesis, not a validated review protocol. The system checks reference integrity, not whether these passages entail this advice."
+    },
+    {
+      "claim_id": "inference-try",
+      "kind": "inference",
+      "statement": "A learner-first comparison step may be worth testing in this workspace.",
+      "citations": [
+        {
+          "source_id": "bucinca-2021-v1",
+          "passage": "forcing-study",
+          "expected_revision": "arXiv:2102.09692v1, 2021-02-19",
+          "expected_excerpt_sha256": "efba7c7e3dc2bf5eef4013f86c998c54730434fbb03d8ae5c5efdfddca941720"
+        }
+      ],
+      "limitation": "Project design inference. Benefit for nurses has not been measured; added burden and unequal effects must also be tested."
+    },
+    {
+      "claim_id": "gap-outcomes",
+      "kind": "missing_information",
+      "statement": "This workspace has no observed nurse-learning outcome results yet.",
+      "citations": [],
+      "limitation": "No learning score, competence badge or effectiveness claim can be inferred from software tests."
+    },
+    {
+      "claim_id": "exercise-unsupported",
+      "kind": "inference",
+      "statement": "Practice example to challenge: a polished answer with citations is automatically trustworthy.",
+      "citations": [],
+      "limitation": "Deliberately unsupported teaching example, not advice. No supporting passage is supplied."
+    }
+  ],
+  "glossary": [
+    {
+      "concept_id": "provenance",
+      "label": "Provenance",
+      "definition": "The recorded relationships among a resource, its inputs and how it was produced. This does not prove truth.",
+      "passage_ids": [
+        "prov-lineage"
+      ],
+      "basis": "source_linked_paraphrase"
+    },
+    {
+      "concept_id": "applicability",
+      "label": "Applicability",
+      "definition": "Whether evidence fits the intended use and conditions; extrapolation beyond evaluated conditions needs justification.",
+      "passage_ids": [
+        "nist-scope"
+      ],
+      "basis": "source_linked_paraphrase"
+    },
+    {
+      "concept_id": "overreliance",
+      "label": "Overreliance",
+      "definition": "Accepting an AI suggestion when that suggestion is wrong; the linked experiment investigates ways to reduce this.",
+      "passage_ids": [
+        "forcing-study"
+      ],
+      "basis": "source_linked_paraphrase"
+    },
+    {
+      "concept_id": "integrity",
+      "label": "Excerpt integrity",
+      "definition": "Whether the stored text matches its pinned hash. A match does not prove source accuracy or present-day currency.",
+      "passage_ids": [],
+      "basis": "project_working_definition"
+    },
+    {
+      "concept_id": "support",
+      "label": "Claim support",
+      "definition": "Whether a passage actually warrants a statement. Resolving a reference is not enough; this prototype does not automate that judgment.",
+      "passage_ids": [],
+      "basis": "project_working_definition"
+    },
+    {
+      "concept_id": "missing",
+      "label": "Missing information",
+      "definition": "An explicit gap that remains unresolved, not a reason to invent content.",
+      "passage_ids": [],
+      "basis": "project_working_definition"
+    }
+  ],
+  "ai_assistance": {
+    "used": true,
+    "method": "AI-assisted assembly, working glossary and interpretations from inspected public excerpts. Source authors retain attribution. No runtime model call is made by the workspace."
+  },
+  "limitations": [
+    "Three purposively selected excerpts, not a systematic literature review or clinical guidance.",
+    "Independent professional appraisal, nurse walkthroughs and learning outcomes remain pending.",
+    "All sources are read-only snapshots; no live source-refresh or semantic entailment service exists.",
+    "The project review date is a maintenance reminder, not a claim that evidence expires on that date."
+  ]
+}
