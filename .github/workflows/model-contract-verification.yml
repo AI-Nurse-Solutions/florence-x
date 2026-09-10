@@ -67,6 +67,15 @@ jobs:
       - name: Offline adapter comparison and no-fallback probes
         if: ${{ !cancelled() && steps.install.outcome == 'success' }}
         run: python scripts/model_contract_demo.py --output /tmp/ss05-evidence/model-contract-demo
+      - name: SS-05B documented provider codecs lint (blocking)
+        if: ${{ !cancelled() && steps.install.outcome == 'success' }}
+        run: |
+          set -o pipefail
+          ruff check packages/florence-core/florence_core/schemas/provider_codec.py packages/florence-model-router/florence_model_router/provider_codecs.py scripts/provider_codec_demo.py tests/unit/test_provider_codecs.py --output-format=concise 2>&1 | tee /tmp/ss05-evidence/provider-codecs-lint.txt
+      - name: SS-05B offline provider-format comparison
+        if: ${{ !cancelled() && steps.install.outcome == 'success' }}
+        run: |
+          python scripts/provider_codec_demo.py --output /tmp/ss05-evidence/provider-codec-demo
       - name: JavaScript transitions and Python contract parity
         if: ${{ !cancelled() && steps.install.outcome == 'success' }}
         run: |
