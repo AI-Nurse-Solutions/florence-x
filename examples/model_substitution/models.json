@@ -1,0 +1,16 @@
+[
+  {
+    "profile_id": "fixture.device.text", "version": "0.1.0", "adapter": "text_fixture_v1",
+    "simulated_placement": "device", "actual_execution": "in_memory_fixture",
+    "capabilities": ["text", "structured_output"], "max_context_bytes": 32000,
+    "max_output_tokens": 1024, "suitability": "fixture_contract_only", "cost_units": 4,
+    "latency_ms": 500, "estimates_basis": "invented_fixture_values_not_model_performance"
+  },
+  {
+    "profile_id": "fixture.cloud.object", "version": "0.1.0", "adapter": "object_fixture_v1",
+    "simulated_placement": "external_provider", "actual_execution": "in_memory_fixture",
+    "capabilities": ["text", "structured_output"], "max_context_bytes": 32000,
+    "max_output_tokens": 1024, "suitability": "fixture_contract_only", "cost_units": 1,
+    "latency_ms": 100, "estimates_basis": "invented_fixture_values_not_model_performance"
+  }
+]

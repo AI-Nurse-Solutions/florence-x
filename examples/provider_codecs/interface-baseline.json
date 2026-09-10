@@ -1,0 +1,32 @@
+{
+  "schema_version": "0.1.0",
+  "baseline_id": "provider-codecs.inspected-2026-09-10",
+  "status": "reference_only_not_deployment_authorization",
+  "inspected_on": "2026-09-10",
+  "scope": "Non-streaming text with JSON-schema output; no transport or model evaluation",
+  "sources": [
+    {"id":"ollama-chat-docs","url":"https://docs.ollama.com/api/chat","scope":"Request model/messages/format/options/stream and response message/done/done_reason/count fields","revision":"Web documentation inspected 2026-09-10; no vendor version asserted"},
+    {"id":"ollama-structured","url":"https://docs.ollama.com/capabilities/structured-outputs","scope":"JSON schema in format; non-streaming example; Ollama Cloud exclusion","revision":"Web documentation inspected 2026-09-10"},
+    {"id":"ollama-options","url":"https://docs.ollama.com/modelfile","scope":"num_predict parameter description","revision":"Web documentation inspected 2026-09-10"},
+    {"id":"ollama-types","url":"https://github.com/ollama/ollama/blob/ea8d65004affdae6464af1c73a55eb34f5a67eb1/api/types.go","commit":"ea8d65004affdae6464af1c73a55eb34f5a67eb1","git_blob_sha":"7ea9022be92ec29fe13cba4685d2f84b8d6cfcf5","scope":"Lines 80–290; ChatRequest and Message, not server dispatch or complete implementation"},
+    {"id":"openai-create","url":"https://developers.openai.com/api/reference/resources/chat/subresources/completions/methods/create","scope":"model/messages, max_completion_tokens, n, store, stream, response_format.json_schema","revision":"Web documentation inspected 2026-09-10"},
+    {"id":"openai-response","url":"https://developers.openai.com/api/reference/resources/chat","scope":"ChatCompletion, choice finish_reason, message content/refusal, optional usage","revision":"Web documentation inspected 2026-09-10"},
+    {"id":"openai-structured","url":"https://developers.openai.com/api/docs/guides/structured-outputs","scope":"Strict JSON schema; refusal and incomplete-response handling","revision":"Web documentation inspected 2026-09-10"},
+    {"id":"openai-python-type","repository":"openai/openai-python","path":"src/openai/types/chat/chat_completion.py","git_blob_sha":"9372c4a68c72cd6781bee9f77ba153cf22234b6d","scope":"Choice and ChatCompletion source; reference only; no SDK imported","revision":"Exact fetched blob on main at inspection; not an API-server version"}
+  ],
+  "rights": {
+    "code": "Project-authored implementation under the repository license; no vendor code copied or SDK dependency added.",
+    "fixtures": "Authored synthetic format examples, not captured provider responses or copyrighted model outputs.",
+    "learning_sources": "Existing SS-02 attribution/reuse restrictions retained unchanged.",
+    "provider_terms_and_models": "No provider selected or model licensed/deployed. Model weights, terms, retention and permitted uses require separate assessment."
+  },
+  "known_limits": [
+    "Only an explicit subset; unknown response fields are refused except named discarded diagnostics.",
+    "Ollama Cloud structured-output support is not claimed; the inspected official guide says it is unsupported.",
+    "OpenAI Chat Completions only, not Responses/Realtime/Assistants or compatible third-party endpoints.",
+    "store=false is a request field, not a promise of zero retention or provider-side enforcement.",
+    "Exact requested/returned model names are caller-supplied fixture metadata; aliases need explicit reviewed bindings before live use.",
+    "Full webpage-byte downloads failed in the execution environment; the record pins inspected URLs/date and available Git blob/commit identifiers, not fabricated webpage hashes.",
+    "No full upstream security/license audit or live API conformance test occurred."
+  ]
+}

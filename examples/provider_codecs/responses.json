@@ -1,0 +1,31 @@
+{
+  "origin": "authored_provider_format_fixture",
+  "model_existence_checked": false,
+  "model": "fixture-model-v1",
+  "proposal": {
+    "summary": "Examine scope and provenance before relying on this educational resource.",
+    "limitations": ["Authored test content, not a live model response.", "No nurse learning outcome has been measured."],
+    "cited_passages": ["nist-scope", "prov-lineage"],
+    "semantic_support": "not_verified",
+    "review_status": "not_independently_reviewed"
+  },
+  "ollama_chat_v1": {
+    "model": "fixture-model-v1",
+    "created_at": "2026-09-10T00:00:00Z",
+    "message": {"role": "assistant", "content": "__PROPOSAL_JSON__"},
+    "done": true,
+    "done_reason": "stop",
+    "prompt_eval_count": 180,
+    "eval_count": 70,
+    "total_duration": 100000000
+  },
+  "openai_chat_completions_v1": {
+    "id": "chatcmpl-authored-fixture",
+    "object": "chat.completion",
+    "created": 1788998400,
+    "model": "fixture-model-v1",
+    "choices": [{"index": 0, "finish_reason": "stop", "logprobs": null,
+                 "message": {"role": "assistant", "content": "__PROPOSAL_JSON__", "refusal": null}}],
+    "usage": {"prompt_tokens": 180, "completion_tokens": 70, "total_tokens": 250}
+  }
+}
