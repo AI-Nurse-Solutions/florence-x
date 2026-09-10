@@ -6,9 +6,11 @@ for non-PHI / redacted inputs (and requires a BAA + redaction in deployment).
 from __future__ import annotations
 
 import uuid
+from datetime import datetime
 
 from florence_core.schemas import ModelRoute
 from florence_core.schemas.enums import DataClass, RiskTier
+from florence_core.schemas.inference import FixtureModelProfile, InferenceRequest, OfflineAdmission, RoutePlan
 
 # Minimal default catalogue; replace with configured endpoints in deployment.
 LOCAL_SLM = "local_clinical_slm"
@@ -51,3 +53,14 @@ class ModelRouter:
             rationale=rationale,
             fallback_model=LOCAL_SLM,
         )
+
+    def plan_inference(self, request: InferenceRequest, profiles: tuple[FixtureModelProfile, ...],
+                       admission: OfflineAdmission | None, *, now: datetime) -> RoutePlan:
+        """Optional SS-05 offline contract path; allow_cloud is NOT admission.
+
+        This does not change or certify the legacy clinical routing demo above.
+        It performs no inference and accepts no live provider endpoints.
+        """
+        from .inference import plan_inference
+
+        return plan_inference(request, profiles, admission, now=now)
