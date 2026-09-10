@@ -1,0 +1,75 @@
+{
+  "contract_version": "0.1.0",
+  "catalog_id": "learning-mission-demo",
+  "artifacts": [
+    {
+      "artifact_id": "source-checking-guide",
+      "version": "0.1.0",
+      "title": "Checking an AI-generated learning resource",
+      "purpose": "Demonstrate inspectable provenance and uncertainty before resource selection",
+      "intended_users": [
+        "Nurses learning to inspect AI-generated resources"
+      ],
+      "owner_ref": "synthetic-author",
+      "primary_pillar": "knowledge",
+      "pillar_dependencies": [
+        "judgment",
+        "capability",
+        "contribution"
+      ],
+      "data_classification": "public",
+      "origin": "synthetic_fixture",
+      "kind": "learning_guide",
+      "media_type": "text/markdown",
+      "content_sha256": "d6b52a5e37f15fd8f7da0fddabb360801e994530f0fbeca20ec68850e91f5bed",
+      "created_at": "2026-09-09T00:00:00Z",
+      "publication_state": "draft",
+      "sources": [
+        {
+          "source_id": "synthetic-source",
+          "revision": "0.1.0",
+          "content_sha256": "b517094cdb8fa9df424f5974adef9af6ce3d4688e187cdcc3b1da1809b0c8400",
+          "locator": "fixture:synthetic-source.txt",
+          "origin": "synthetic_fixture",
+          "data_classification": "public",
+          "applicability": "Catalog software tests only"
+        }
+      ],
+      "claims": [
+        {
+          "claim_id": "reference-limit",
+          "kind": "retrieved_evidence",
+          "statement": "The fixture distinguishes a passage reference from support verification.",
+          "citations": [
+            {
+              "source_id": "synthetic-source",
+              "passage": "line 2"
+            }
+          ]
+        },
+        {
+          "claim_id": "draft-method",
+          "kind": "generated_synthesis",
+          "statement": "The draft asks learners to examine sources, uncertainty and their own interpretation.",
+          "citations": []
+        },
+        {
+          "claim_id": "learning-gap",
+          "kind": "missing_information",
+          "statement": "No nurse learning outcomes have been measured.",
+          "citations": []
+        }
+      ],
+      "limitations": [
+        "Synthetic demonstration, not clinical advice",
+        "No content review or nurse usability evaluation"
+      ],
+      "rights_note": "Newly authored project test fixture; repository license applies to this fixture, not to unrelated sources.",
+      "ai_assistance": {
+        "used": true,
+        "method": "AI-assisted drafting of a synthetic software fixture; not independently content-reviewed"
+      }
+    }
+  ],
+  "reviews": []
+}
