@@ -1,0 +1,121 @@
+name: portfolio-contract-verification
+on:
+  pull_request:
+permissions:
+  contents: read
+jobs:
+  full-suite:
+    if: github.head_ref == 'review/speed-sprint-ss06'
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    services:
+      postgres:
+        image: postgres:16
+        env: {POSTGRES_USER: florence_test, POSTGRES_PASSWORD: ephemeral_ci_only, POSTGRES_DB: florence_test}
+        ports: ['5432:5432']
+        options: >-
+          --health-cmd "pg_isready -U florence_test -d florence_test"
+          --health-interval 5s --health-timeout 5s --health-retries 10
+      redis:
+        image: redis:7
+        ports: ['6379:6379']
+        options: >-
+          --health-cmd "redis-cli ping"
+          --health-interval 5s --health-timeout 5s --health-retries 10
+    env:
+      FLORENCE_TEST_DATABASE_URL: postgresql+psycopg://florence_test:ephemeral_ci_only@localhost:5432/florence_test
+      FLORENCE_TEST_REDIS_URL: redis://localhost:6379/15
+      LANGCHAIN_TRACING_V2: 'false'
+      LANGSMITH_TRACING: 'false'
+    steps:
+      - uses: actions/checkout@v4
+        with: {persist-credentials: false}
+      - uses: actions/setup-python@v5
+        with: {python-version: '3.12'}
+      - uses: open-policy-agent/setup-opa@v2
+      - name: Install and record exact public source
+        id: install
+        run: |
+          pip install -e packages/florence-core -e packages/florence-edena -e packages/florence-connectors -e packages/florence-model-router -e packages/florence-cli
+          pip install '.[api,dev]' 'ruff==0.16.6' 'playwright==1.57.0'
+          mkdir -p /tmp/ss06-evidence
+          pip freeze > /tmp/ss06-evidence/dependencies.txt
+          python --version > /tmp/ss06-evidence/tool-versions.txt
+          ruff --version >> /tmp/ss06-evidence/tool-versions.txt
+          node --version >> /tmp/ss06-evidence/tool-versions.txt
+          opa version >> /tmp/ss06-evidence/tool-versions.txt
+          git rev-parse HEAD > /tmp/ss06-evidence/tested-commit.txt
+          git archive --format=tar HEAD > /tmp/ss06-evidence/source.tar
+          git ls-tree -r HEAD > /tmp/ss06-evidence/source-tree.txt
+      - name: SS-06A lint (blocking)
+        run: |
+          set -o pipefail
+          ruff check packages/florence-core/florence_core/schemas/portfolio.py packages/florence-core/florence_core/portfolio_contract.py scripts/portfolio_contract_demo.py tests/unit/test_portfolio_contract.py tests/browser/verify_portfolio_report.py --output-format=concise 2>&1 | tee /tmp/ss06-evidence/portfolio-lint.txt
+      - name: Full repository tests
+        if: ${{ !cancelled() && steps.install.outcome == 'success' }}
+        run: |
+          set -o pipefail
+          pytest -q -ra --junitxml=/tmp/ss06-evidence/tests.xml 2>&1 | tee /tmp/ss06-evidence/tests.txt
+      - name: Authored scenarios and retained model demos
+        if: ${{ !cancelled() && steps.install.outcome == 'success' }}
+        run: |
+          python scripts/portfolio_contract_demo.py --output /tmp/ss06-evidence/portfolio-demo
+          python scripts/model_contract_demo.py --output /tmp/ss06-evidence/model-contract-demo
+          python scripts/provider_codec_demo.py --output /tmp/ss06-evidence/provider-codec-demo
+          python scripts/build_learning_workspace.py --check
+      - name: Existing JavaScript and Python parity
+        if: ${{ !cancelled() && steps.install.outcome == 'success' }}
+        run: |
+          set -o pipefail
+          node tests/javascript/test_deliberation.cjs /tmp/ss06-evidence/js-snapshots.json | tee /tmp/ss06-evidence/js-tests.txt
+          python - <<'PY'
+          import json
+          from pathlib import Path
+          from florence_core.schemas.deliberation import parse_pack, validate_session
+          pack = parse_pack(Path('examples/learning_deliberation/practice-pack.json').read_bytes())
+          snapshots = json.loads(Path('/tmp/ss06-evidence/js-snapshots.json').read_text())
+          for item in snapshots:
+              validate_session(json.dumps(item).encode(), pack)
+          Path('/tmp/ss06-evidence/parity.txt').write_text(f'{len(snapshots)} snapshots validated.\n')
+          PY
+      - name: Existing companion contract and browser boundary
+        if: ${{ !cancelled() && steps.install.outcome == 'success' }}
+        run: |
+          set -o pipefail
+          python scripts/build_hermes_companion.py --output /tmp/ss06-evidence/companion
+          node --experimental-vm-modules tests/javascript/test_hermes_companion.cjs /tmp/ss06-evidence/companion/plugin.js 2>&1 | tee /tmp/ss06-evidence/companion-js.txt
+          python -m playwright install --with-deps chromium
+          python tests/browser/verify_hermes_companion.py /tmp/ss06-evidence/companion/preview.html /tmp/ss06-evidence/browser 2>&1 | tee /tmp/ss06-evidence/browser.txt
+      - name: SS-06A report browser check
+        if: ${{ !cancelled() && steps.install.outcome == 'success' }}
+        run: python tests/browser/verify_portfolio_report.py /tmp/ss06-evidence/portfolio-demo /tmp/ss06-evidence/portfolio-browser
+      - name: Existing action and decision schemas
+        if: ${{ !cancelled() && steps.install.outcome == 'success' }}
+        run: |
+          python - <<'PY'
+          import json
+          from pathlib import Path
+          from florence_core.schemas import CandidateAction, EDENADecision
+          for name, model in [('candidate_action', CandidateAction), ('edena_decision', EDENADecision)]:
+              assert json.load(open(f'schemas/{name}.schema.json')) == model.model_json_schema(), name
+          Path('/tmp/ss06-evidence/schema.txt').write_text('no schema drift\n')
+          PY
+      - name: Existing synthetic HTTP loop
+        if: ${{ !cancelled() && steps.install.outcome == 'success' }}
+        run: |
+          set -o pipefail
+          mkdir -p .tooling/bin
+          cp "$(command -v opa)" .tooling/bin/opa
+          python scripts/e2e_live.py 2>&1 | tee /tmp/ss06-evidence/e2e.txt
+      - name: Repository lint (blocking; no edits)
+        if: ${{ !cancelled() && steps.install.outcome == 'success' }}
+        run: |
+          set -o pipefail
+          ruff check . --output-format=concise 2>&1 | tee /tmp/ss06-evidence/lint.txt
+      - name: Preserve evidence even when checks fail
+        if: ${{ !cancelled() && steps.install.outcome == 'success' }}
+        uses: actions/upload-artifact@v4
+        with:
+          name: portfolio-contract-verification-evidence
+          path: /tmp/ss06-evidence
+          retention-days: 14
