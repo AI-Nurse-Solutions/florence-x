@@ -77,7 +77,9 @@ const guide = (() => {
         excluded_fields:['initial_interpretation','reflection','SOUL','conversation_history'],
         persistence:'memory_only', saved:false, submitted:false};
       if (new TextEncoder().encode(JSON.stringify(note)).length > 32768) throw new Error('Size');
-      notes.push({binding:key,note}); show(); $('note-card').scrollIntoView({block:'nearest'});
+      notes.push({binding:key,note}); show();
+      // Move focus only after explicit successful assembly, never on a view refresh.
+      $('note-title').focus({preventScroll:true}); $('note-card').scrollIntoView({block:'nearest'});
     } catch (_) { $('note-status').textContent = 'Note assembly stopped. No new note, save or transmission occurred.'; }
   });
   return {update(s,v) { currentSession=s;currentView=v;show(); }, clear() { notes=[];show(); }};
