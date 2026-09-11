@@ -10,9 +10,8 @@ from datetime import timedelta
 from pathlib import Path
 
 import pytest
-
 from florence_core.portfolio_contract import ERROR, assess_save_fixture, parse_scenario
-from florence_core.schemas.portfolio import PortfolioEnvelope, SaveScenario, digest
+from florence_core.schemas.portfolio import PortfolioEnvelope, digest
 
 ROOT = Path(__file__).resolve().parents[2]
 spec = importlib.util.spec_from_file_location("portfolio_examples", ROOT / "scripts/portfolio_contract_demo.py")
