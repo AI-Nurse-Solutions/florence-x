@@ -1,0 +1,99 @@
+name: teaching-card-verification
+on:
+  pull_request:
+permissions:
+  contents: read
+jobs:
+  full-suite:
+    if: github.head_ref == 'review/mission-delivery-md01'
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    services:
+      postgres:
+        image: postgres:16
+        env: {POSTGRES_USER: florence_test, POSTGRES_PASSWORD: ephemeral_ci_only, POSTGRES_DB: florence_test}
+        ports: ['5432:5432']
+        options: >-
+          --health-cmd "pg_isready -U florence_test -d florence_test"
+          --health-interval 5s --health-timeout 5s --health-retries 10
+      redis:
+        image: redis:7
+        ports: ['6379:6379']
+        options: >-
+          --health-cmd "redis-cli ping"
+          --health-interval 5s --health-timeout 5s --health-retries 10
+    env:
+      FLORENCE_TEST_DATABASE_URL: postgresql+psycopg://florence_test:ephemeral_ci_only@localhost:5432/florence_test
+      FLORENCE_TEST_REDIS_URL: redis://localhost:6379/15
+      LANGCHAIN_TRACING_V2: 'false'
+      LANGSMITH_TRACING: 'false'
+    steps:
+      - uses: actions/checkout@v4
+        with: {persist-credentials: false}
+      - uses: actions/setup-python@v5
+        with: {python-version: '3.12'}
+      - uses: open-policy-agent/setup-opa@v2
+      - name: Install and preserve source identity
+        id: install
+        run: |
+          pip install -e packages/florence-core -e packages/florence-edena -e packages/florence-connectors -e packages/florence-model-router -e packages/florence-cli
+          pip install '.[api,dev]' 'ruff==0.16.6' 'playwright==1.57.0'
+          mkdir -p /tmp/md01-evidence
+          pip freeze > /tmp/md01-evidence/dependencies.txt
+          python --version > /tmp/md01-evidence/versions.txt
+          node --version >> /tmp/md01-evidence/versions.txt
+          ruff --version >> /tmp/md01-evidence/versions.txt
+          git rev-parse HEAD > /tmp/md01-evidence/tested-commit.txt
+          git archive --format=tar HEAD > /tmp/md01-evidence/source.tar
+          git ls-tree -r HEAD > /tmp/md01-evidence/source-tree.txt
+      - name: Full repository tests
+        if: ${{ !cancelled() && steps.install.outcome == 'success' }}
+        run: |
+          set -o pipefail
+          pytest -q -ra --junitxml=/tmp/md01-evidence/tests.xml 2>&1 | tee /tmp/md01-evidence/tests.txt
+      - name: New lint and build
+        if: ${{ !cancelled() && steps.install.outcome == 'success' }}
+        run: |
+          set -o pipefail
+          ruff check scripts/build_teaching_card_workspace.py tests/unit/test_teaching_card_workspace.py tests/browser/verify_teaching_card.py --output-format=concise 2>&1 | tee /tmp/md01-evidence/new-lint.txt
+          python scripts/build_teaching_card_workspace.py --output /tmp/md01-evidence/teaching-card
+      - name: Pure projection and retained transitions
+        if: ${{ !cancelled() && steps.install.outcome == 'success' }}
+        run: |
+          set -o pipefail
+          node tests/javascript/test_teaching_card.cjs | tee /tmp/md01-evidence/projection.txt
+          node tests/javascript/test_deliberation.cjs /tmp/md01-evidence/js-snapshots.json | tee /tmp/md01-evidence/transitions.txt
+          python scripts/build_learning_workspace.py --check
+          python scripts/portfolio_contract_demo.py --output /tmp/md01-evidence/portfolio
+          python scripts/model_contract_demo.py --output /tmp/md01-evidence/model
+          python scripts/provider_codec_demo.py --output /tmp/md01-evidence/codecs
+      - name: Current and retained browser behavior
+        if: ${{ !cancelled() && steps.install.outcome == 'success' }}
+        run: |
+          python -m playwright install --with-deps chromium
+          python tests/browser/verify_teaching_card.py /tmp/md01-evidence/teaching-card/walkthrough.html /tmp/md01-evidence/card-browser
+          python tests/browser/verify_mission_walkthrough.py /tmp/md01-evidence/teaching-card/walkthrough.html /tmp/md01-evidence/journey-browser
+          python tests/browser/verify_review_note_focus.py /tmp/md01-evidence/teaching-card/walkthrough.html /tmp/md01-evidence/note-browser
+          python tests/browser/verify_portfolio_report.py /tmp/md01-evidence/portfolio /tmp/md01-evidence/portfolio-browser
+          python scripts/build_hermes_companion.py --output /tmp/md01-evidence/companion
+          node --experimental-vm-modules tests/javascript/test_hermes_companion.cjs /tmp/md01-evidence/companion/plugin.js
+          python tests/browser/verify_hermes_companion.py /tmp/md01-evidence/companion/preview.html /tmp/md01-evidence/companion-browser
+      - name: Existing synthetic HTTP loop
+        if: ${{ !cancelled() && steps.install.outcome == 'success' }}
+        run: |
+          set -o pipefail
+          mkdir -p .tooling/bin
+          cp "$(command -v opa)" .tooling/bin/opa
+          python scripts/e2e_live.py 2>&1 | tee /tmp/md01-evidence/http.txt
+      - name: Repository lint remains blocking
+        if: ${{ !cancelled() && steps.install.outcome == 'success' }}
+        run: |
+          set -o pipefail
+          ruff check . --output-format=concise 2>&1 | tee /tmp/md01-evidence/lint.txt
+      - name: Preserve actual evidence including failures
+        if: ${{ !cancelled() && steps.install.outcome == 'success' }}
+        uses: actions/upload-artifact@v4
+        with:
+          name: md01-verification-evidence
+          path: /tmp/md01-evidence
+          retention-days: 14
