@@ -55,7 +55,7 @@ jobs:
         if: ${{ !cancelled() && steps.install.outcome == 'success' }}
         run: |
           set -o pipefail
-          ruff check scripts/build_teaching_card_workspace.py tests/unit/test_teaching_card_workspace.py tests/browser/verify_teaching_card.py --output-format=concise 2>&1 | tee /tmp/md01-evidence/new-lint.txt
+          ruff check scripts/build_teaching_card_workspace.py tests/unit/test_teaching_card_workspace.py tests/browser/verify_teaching_card.py tests/browser/verify_unsaved_warning.py --output-format=concise 2>&1 | tee /tmp/md01-evidence/new-lint.txt
           python scripts/build_teaching_card_workspace.py --output /tmp/md01-evidence/teaching-card
       - name: Pure projection and retained transitions
         if: ${{ !cancelled() && steps.install.outcome == 'success' }}
@@ -72,6 +72,7 @@ jobs:
         run: |
           python -m playwright install --with-deps chromium
           python tests/browser/verify_teaching_card.py /tmp/md01-evidence/teaching-card/walkthrough.html /tmp/md01-evidence/card-browser
+          python tests/browser/verify_unsaved_warning.py /tmp/md01-evidence/teaching-card/walkthrough.html /tmp/md01-evidence/unsaved-warning-browser
           python tests/browser/verify_mission_walkthrough.py /tmp/md01-evidence/teaching-card/walkthrough.html /tmp/md01-evidence/journey-browser
           python tests/browser/verify_review_note_focus.py /tmp/md01-evidence/teaching-card/walkthrough.html /tmp/md01-evidence/note-browser
           python tests/browser/verify_portfolio_report.py /tmp/md01-evidence/portfolio /tmp/md01-evidence/portfolio-browser

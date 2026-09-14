@@ -2,6 +2,40 @@
 const teaching = (() => {
   const bundle = JSON.parse($('bundle').textContent);
   let currentSession = null, currentView = null, designRevision = 0, drafts = [];
+  // This predicate reads existing state; it retains no additional learner text.
+  const leaveFields = Array.from(document.querySelectorAll(
+    '#initial-form input, #initial-form textarea, #decision-form input, #decision-form textarea, ' +
+    '#reflection-form textarea, #tc-goal, #tc-audience'));
+  let leaveWarningActive = false;
+  const hasUnsavedWork = () => drafts.length > 0 ||
+    !!currentSession?.rounds.some(r => r.initial !== null || r.decision !== null || r.reflection !== null) ||
+    leaveFields.some(field => {
+      if (field.type === 'checkbox' || field.type === 'radio') return field.checked !== field.defaultChecked;
+      if (field.tagName === 'SELECT') {
+        const original = Array.from(field.options).find(option => option.defaultSelected) || field.options[0];
+        return field.value !== original.value;
+      }
+      return field.value.trim() !== field.defaultValue.trim();
+    });
+  const warnBeforeLeaving = event => {
+    if (!hasUnsavedWork()) return;
+    event.preventDefault();
+    event.returnValue = true; // Browser-controlled wording; legacy support, not a save.
+  };
+  function refreshLeaveWarning() {
+    const needed = hasUnsavedWork();
+    if (needed === leaveWarningActive) return;
+    leaveWarningActive = needed;
+    if (needed) window.addEventListener('beforeunload', warnBeforeLeaving);
+    else window.removeEventListener('beforeunload', warnBeforeLeaving);
+    $('tc-leave-status').textContent = needed
+      ? 'Unsaved work is present. A browser warning is requested when you reload or leave. Nothing has been saved.'
+      : 'No work is waiting to be kept. This page does not save your entries.';
+  }
+  leaveFields.forEach(field => {
+    field.addEventListener('input', refreshLeaveWarning);
+    field.addEventListener('change', refreshLeaveWarning);
+  });
   const design = () => ({goal:$('tc-goal').value.trim(), audience:$('tc-audience').value, revision:designRevision});
   const binding = () => NAIOTeachingCard.binding(currentSession, currentView, bundle, design());
   const inspectSource = id => {
@@ -47,6 +81,7 @@ const teaching = (() => {
     }
     $('tc-json').textContent=drafts.length?JSON.stringify({persistence:'memory_only',authority:'no_execution_permission',
       drafts:drafts.map((x,i)=>({...x,display_state:i===drafts.length-1&&live?'current_in_memory':'historical_in_memory'}))},null,2):'No teaching card assembled.';
+    refreshLeaveWarning();
   }
   $('tc-compose').addEventListener('click',()=>{
     try{
