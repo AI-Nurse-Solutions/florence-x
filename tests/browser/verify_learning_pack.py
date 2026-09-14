@@ -7,6 +7,7 @@ from pathlib import Path
 
 from playwright.sync_api import sync_playwright
 
+
 def verify(path: Path, output: Path, executable: str | None=None) -> dict:
     text = path.read_text(encoding='utf-8')
     checks, requests, errors = ([], [], [])
