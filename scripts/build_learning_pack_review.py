@@ -4,6 +4,7 @@ Reuses EvidencePack. This does not admit content to the application, establish
 rights by itself, authenticate a review, or create an execution permission.
 """
 from __future__ import annotations
+
 import argparse
 import base64
 import hashlib
@@ -12,8 +13,10 @@ import json
 from datetime import datetime
 from pathlib import Path
 from urllib.parse import urlparse
+
 from florence_core.schemas.learning_evidence import inspect_evidence, parse_evidence
 from florence_core.schemas.mission import _no_constant, _unique_object
+
 ROOT = Path(__file__).resolve().parents[1]
 PACK = ROOT / 'examples/learning_pack_md02'
 ERROR = 'Candidate learning pack failed inspection; nothing was admitted.'
@@ -31,15 +34,15 @@ def validate(raw: bytes, design: dict) -> dict:
         if design['application_admission'] != {'state': 'not_admitted', 'active_source_pack_changed': False, 'permissions_granted': False, 'training_authorized': False, 'saving_enabled': False}:
             raise ValueError('admission')
         m = design['maintenance']
-        if m['state'] != 'owner_acceptance_pending' or any((m[k] is not None for k in ('content_steward', 'rights_steward', 'independent_reviewer'))) or m['surveillance_running'] is not False:
+        if m['state'] != 'owner_acceptance_pending' or any(m[k] is not None for k in ('content_steward', 'rights_steward', 'independent_reviewer')) or m['surveillance_running'] is not False:
             raise ValueError('maintenance not established')
         when = datetime.fromisoformat(design['created_at'])
         if datetime.fromisoformat(m['proposed_review_due_at']) <= when or not m['triggers']:
             raise ValueError('maintenance dates')
         inspected = inspect_evidence(pack, as_of=when)
-        if any((p['integrity'] != 'excerpt_match' for p in inspected['passages'])):
+        if any(p['integrity'] != 'excerpt_match' for p in inspected['passages']):
             raise ValueError('changed excerpt')
-        if any((c['status'] not in ('quoted_excerpt_match', 'linked_not_verified', 'missing_information') for c in inspected['claims'])):
+        if any(c['status'] not in ('quoted_excerpt_match', 'linked_not_verified', 'missing_information') for c in inspected['claims']):
             raise ValueError('unresolved claim')
         known = {p.passage_id for p in pack.passages}
         sources = {p.source.source_id for p in pack.passages}
@@ -92,13 +95,13 @@ def render(raw: bytes, d: dict) -> str:
         return '<p><strong>' + e(label) + ':</strong> ' + e(text) + '</p>'
 
     def links(ids: list[str]) -> str:
-        return ' · '.join(('<a href="#' + e(x) + '">Inspect ' + e(x) + '</a>' for x in ids))
+        return ' · '.join('<a href="#' + e(x) + '">Inspect ' + e(x) + '</a>' for x in ids)
     parts = ['<main><div class="eyebrow">Nurse AI OS / MD-02A / Candidate 0.1.0</div>', '<h1>Teach from sources.<br>Keep the limits visible.</h1>', '<p>A compact source-and-learning pack for the one-page teaching-card mission.</p>', '<div class="status" id="review-status"><strong>Independent educator review pending.</strong> Three excerpts have been checked by the development agent; that is not content approval. No participants or learning outcomes are recorded. This pack is not admitted to the application.</div>', '<p class="meta">Inspection: ' + e(d['created_at']) + ' · Source hashes identify excerpts, not truth or authority.</p>', '<nav aria-label="Review sections"><a href="#sources">Sources</a><a href="#lessons">Learning activities</a><a href="#exercises">Balanced exercises</a><a href="#maintenance">Review and maintenance</a></nav>', '<p class="scope">No patient or employer-confidential information. No responses are collected here. This is an authoring/review preview, not a scored assessment or a gated learner workflow. External links explicitly open the publisher; otherwise this file needs no network.</p>', '<section id="sources"><h2>Three sources, three different questions</h2>']
     by_id = {r['source_id']: r for r in d['rights']}
     for p in v['passages']:
         r = by_id[p['source']['source_id']]
         url = p['source']['locator'].split(' | ')[0]
-        parts += ['<article class="source" id="' + e(p['passage_id']) + '"><div class="eyebrow">' + e(p['kind']) + '</div>', '<h3>' + e(p['title']) + '</h3><blockquote>' + e(p['quote']) + '</blockquote>', para('Attribution', p['attribution']), para('Inspected scope', p['inspection_scope']), '<ul>' + ''.join(('<li>' + e(x) + '</li>' for x in p['limitations'])) + '</ul>', '<a rel="noreferrer noopener" target="_blank" href="' + e(url) + '">Open original source externally</a>', '<details class="rights"><summary>Version, reuse terms and evidence limits</summary>', para('Source revision', p['source']['revision']), para('Rights notice', p['rights_note'])]
+        parts += ['<article class="source" id="' + e(p['passage_id']) + '"><div class="eyebrow">' + e(p['kind']) + '</div>', '<h3>' + e(p['title']) + '</h3><blockquote>' + e(p['quote']) + '</blockquote>', para('Attribution', p['attribution']), para('Inspected scope', p['inspection_scope']), '<ul>' + ''.join('<li>' + e(x) + '</li>' for x in p['limitations']) + '</ul>', '<a rel="noreferrer noopener" target="_blank" href="' + e(url) + '">Open original source externally</a>', '<details class="rights"><summary>Version, reuse terms and evidence limits</summary>', para('Source revision', p['source']['revision']), para('Rights notice', p['rights_note'])]
         for key in ('retrieval', 'excerpt_redistribution', 'adaptation', 'commercial_distribution', 'model_training'):
             parts.append(para(key.replace('_', ' ').capitalize(), r[key]))
         parts += ['<p><a rel="noreferrer noopener" target="_blank" href="' + e(r['terms_url']) + '">Read terms externally</a></p>', '<p class="notice">Rights observations are scoped developer checks, not legal advice or blanket release approval. Underlying licensed rights are unchanged.</p></details></article>']

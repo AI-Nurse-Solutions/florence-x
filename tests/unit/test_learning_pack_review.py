@@ -1,12 +1,15 @@
 """Candidate-asset checks do not establish semantic truth or reviewer authority."""
 from __future__ import annotations
+
 import copy
 import hashlib
 import importlib.util
 import json
 import re
 from pathlib import Path
+
 import pytest
+
 ROOT = Path(__file__).resolve().parents[2]
 spec = importlib.util.spec_from_file_location('pack_review', ROOT / 'scripts/build_learning_pack_review.py')
 mod = importlib.util.module_from_spec(spec)
@@ -21,7 +24,7 @@ def test_existing_evidence_schema_and_no_admission(data):
     raw, d = data
     result = mod.validate(raw, d)
     assert len(result['passages']) == 3 and len(result['claims']) == 6
-    assert all((p['semantic_support'] == 'not_assessed' for p in result['passages']))
+    assert all(p['semantic_support'] == 'not_assessed' for p in result['passages'])
     assert d['application_admission']['state'] == 'not_admitted'
     assert d['review']['actual_participants'] == 0
 
