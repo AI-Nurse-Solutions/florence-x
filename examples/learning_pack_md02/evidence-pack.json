@@ -1,0 +1,243 @@
+{
+  "schema_version": "0.1.0",
+  "pack_id": "teaching-source-foundations",
+  "version": "0.1.0",
+  "mission_id": "mission.public-learning.0001",
+  "mission_sha256": "e3cf03292e21a46b5a3f6297b29da8354e087473995084abe8b9150106e50072",
+  "data_classification": "public",
+  "purpose": "professional_learning",
+  "primary_pillar": "knowledge",
+  "pillar_dependencies": [
+    "judgment",
+    "capability",
+    "contribution"
+  ],
+  "passages": [
+    {
+      "passage_id": "nist-scope",
+      "source": {
+        "source_id": "nist-ai-rmf-core",
+        "revision": "AI RMF 1.0 (2023); AIRC MEASURE 2.5 excerpt rechecked 2026-09-11",
+        "content_sha256": "874c7b9906a68b47855b5b007f537ac9af77b661313a55d54f69221e06ba02e6",
+        "locator": "https://airc.nist.gov/airmf-resources/airmf/5-sec-core/ | Section 5.3, Table 3, MEASURE 2.5, second sentence",
+        "origin": "public_source",
+        "data_classification": "public",
+        "applicability": "Professional learning about AI-generated resources; no patient-specific guidance."
+      },
+      "title": "Document where the evidence stops",
+      "attribution": "National Institute of Standards and Technology, AI RMF 1.0, MEASURE 2.5.",
+      "kind": "guidance",
+      "quote": "Limitations of the generalizability beyond the conditions under which the technology was developed are documented.",
+      "hash_scope": "quoted_excerpt_utf8",
+      "captured_at": "2026-09-11T22:08:22-07:00",
+      "review_due_at": "2026-12-10T22:08:22-08:00",
+      "rights_note": "Tabassi, E. (2023). Artificial Intelligence Risk Management Framework (AI RMF 1.0), NIST AI 100-1. https://doi.org/10.6028/NIST.AI.100-1. Republished courtesy of the National Institute of Standards and Technology. Unmodified excerpt; surrounding lessons are original commentary, not NIST endorsement. NIST technical-series reprint terms apply; no third-party graphics included.",
+      "inspection_scope": "Official AIRC HTML, MEASURE 2.5 and surrounding table read. Snapshot pins the excerpt, not the entire page.",
+      "limitations": [
+        "Guidance about AI risk management, not an experimental result or nursing education outcome.",
+        "This excerpt does not establish the suitability of any particular model or resource."
+      ]
+    },
+    {
+      "passage_id": "prov-lineage",
+      "source": {
+        "source_id": "w3c-prov-o-2013",
+        "revision": "W3C Recommendation 2013-04-30",
+        "content_sha256": "f4719faa96f3e140a4d03413237d2f8332e8422cfe19234d4a7492b5efcbde5d",
+        "locator": "https://www.w3.org/TR/2013/REC-prov-o-20130430/ | Section 3.1, paragraph beginning Activities start and end",
+        "origin": "public_source",
+        "data_classification": "public",
+        "applicability": "Professional learning about AI-generated resources; no patient-specific guidance."
+      },
+      "title": "Trace a resource to its inputs",
+      "attribution": "Timothy Lebo, Satya Sahoo and Deborah McGuinness (editors), PROV-O: The PROV Ontology, W3C Recommendation, 30 April 2013.",
+      "kind": "standard",
+      "quote": "one can construct provenance chains comprising both Activities and Entities.",
+      "hash_scope": "quoted_excerpt_utf8",
+      "captured_at": "2026-09-11T22:08:22-07:00",
+      "review_due_at": "2026-12-10T22:08:22-08:00",
+      "rights_note": "Copyright © 2011-2013 W3C® (MIT, ERCIM, Keio, Beihang), All Rights Reserved. W3C Recommendation 30 April 2013. Source: https://www.w3.org/TR/2013/REC-prov-o-20130430/. Document license: https://www.w3.org/copyright/document-license-2023/. Unmodified sentence fragment; no modified specification or endorsement. Provided as is, without warranties.",
+      "inspection_scope": "Official dated Recommendation, section 3.1: entity/activity/agent definitions and usage/generation paragraph inspected online. Excerpt is a sentence fragment. No full conformance assessment.",
+      "limitations": [
+        "A provenance chain records relationships; it is not evidence that a claim is correct.",
+        "This standard does not certify a reviewer, practitioner or Nurse AI OS."
+      ]
+    },
+    {
+      "passage_id": "openrn-audience",
+      "source": {
+        "source_id": "openrn-fundamentals-2e-overview",
+        "revision": "Nursing Fundamentals 2e (2024), Overview; web snapshot 2026-09-11",
+        "content_sha256": "2ac2518d2a8c396da8899149636c6d50e5861370b837a3f2290a9f2d8198fffb",
+        "locator": "https://wtcs.pressbooks.pub/nursingfundamentals/front-matter/introduction/ | About Nursing Fundamentals Second Edition, audience paragraph, sentence fragment",
+        "origin": "public_source",
+        "data_classification": "public",
+        "applicability": "Examining the stated audience of a learning resource; not transferring the textbook into clinical guidance."
+      },
+      "title": "Check whom a resource was designed for",
+      "attribution": "Ernstmeyer, K., & Christman, E. (Eds.). (2024). Nursing Fundamentals 2e. Open RN | WisTech Open.",
+      "kind": "guidance",
+      "quote": "developed for entry-level nursing students based on the Wisconsin Technical College System (WTCS) statewide nursing curriculum",
+      "hash_scope": "quoted_excerpt_utf8",
+      "captured_at": "2026-09-11T22:08:22-07:00",
+      "review_due_at": "2026-12-10T22:08:22-08:00",
+      "rights_note": "Nursing Fundamentals 2e © 2024 WisTech Open. CC BY 4.0, except where otherwise noted: https://creativecommons.org/licenses/by/4.0/. Original: https://wtcs.pressbooks.pub/nursingfundamentals/front-matter/introduction/. Unmodified excerpt; original teaching commentary added. No endorsement, images, question bank or third-party clinical materials included.",
+      "inspection_scope": "Overview audience paragraph, Licensing/Terms of Use and attribution inspected. Book metadata inspected. The 1.8 chapter returned 403 and was not inspected, reproduced or bypassed. Guidance is the existing schema category for this descriptive educational overview, not a clinical guideline.",
+      "limitations": [
+        "The overview describes intended curriculum and audience; it is not an empirical effectiveness study.",
+        "This excerpt does not establish fitness for another jurisdiction, advanced learner or institution.",
+        "No clinical chapter, cited nursing standard or assessment question has been critically appraised in this slice."
+      ]
+    }
+  ],
+  "claims": [
+    {
+      "claim_id": "quote-nist-scope",
+      "kind": "retrieved_evidence",
+      "statement": "Limitations of the generalizability beyond the conditions under which the technology was developed are documented.",
+      "citations": [
+        {
+          "source_id": "nist-ai-rmf-core",
+          "passage": "nist-scope",
+          "expected_revision": "AI RMF 1.0 (2023); AIRC MEASURE 2.5 excerpt rechecked 2026-09-11",
+          "expected_excerpt_sha256": "874c7b9906a68b47855b5b007f537ac9af77b661313a55d54f69221e06ba02e6"
+        }
+      ],
+      "limitation": "Exact selected excerpt; a text match is not professional approval or proof of effectiveness."
+    },
+    {
+      "claim_id": "quote-prov-lineage",
+      "kind": "retrieved_evidence",
+      "statement": "one can construct provenance chains comprising both Activities and Entities.",
+      "citations": [
+        {
+          "source_id": "w3c-prov-o-2013",
+          "passage": "prov-lineage",
+          "expected_revision": "W3C Recommendation 2013-04-30",
+          "expected_excerpt_sha256": "f4719faa96f3e140a4d03413237d2f8332e8422cfe19234d4a7492b5efcbde5d"
+        }
+      ],
+      "limitation": "Exact selected excerpt; a text match is not professional approval or proof of effectiveness."
+    },
+    {
+      "claim_id": "quote-openrn-audience",
+      "kind": "retrieved_evidence",
+      "statement": "developed for entry-level nursing students based on the Wisconsin Technical College System (WTCS) statewide nursing curriculum",
+      "citations": [
+        {
+          "source_id": "openrn-fundamentals-2e-overview",
+          "passage": "openrn-audience",
+          "expected_revision": "Nursing Fundamentals 2e (2024), Overview; web snapshot 2026-09-11",
+          "expected_excerpt_sha256": "2ac2518d2a8c396da8899149636c6d50e5861370b837a3f2290a9f2d8198fffb"
+        }
+      ],
+      "limitation": "Exact selected excerpt; a text match is not professional approval or proof of effectiveness."
+    },
+    {
+      "claim_id": "scope-before-transfer",
+      "kind": "generated_synthesis",
+      "statement": "Identify the intended learner and context before transferring a teaching resource to a new audience.",
+      "citations": [
+        {
+          "source_id": "openrn-fundamentals-2e-overview",
+          "passage": "openrn-audience",
+          "expected_revision": "Nursing Fundamentals 2e (2024), Overview; web snapshot 2026-09-11",
+          "expected_excerpt_sha256": "2ac2518d2a8c396da8899149636c6d50e5861370b837a3f2290a9f2d8198fffb"
+        },
+        {
+          "source_id": "nist-ai-rmf-core",
+          "passage": "nist-scope",
+          "expected_revision": "AI RMF 1.0 (2023); AIRC MEASURE 2.5 excerpt rechecked 2026-09-11",
+          "expected_excerpt_sha256": "874c7b9906a68b47855b5b007f537ac9af77b661313a55d54f69221e06ba02e6"
+        }
+      ],
+      "limitation": "AI-assisted educational synthesis; cross-domain analogy, not a validated nursing review protocol."
+    },
+    {
+      "claim_id": "lineage-not-verdict",
+      "kind": "inference",
+      "statement": "A traceable production history makes a claim inspectable; it does not by itself show that the claim is correct.",
+      "citations": [
+        {
+          "source_id": "w3c-prov-o-2013",
+          "passage": "prov-lineage",
+          "expected_revision": "W3C Recommendation 2013-04-30",
+          "expected_excerpt_sha256": "f4719faa96f3e140a4d03413237d2f8332e8422cfe19234d4a7492b5efcbde5d"
+        }
+      ],
+      "limitation": "Reasoned distinction about what relationship records establish; no empirical accuracy result claimed."
+    },
+    {
+      "claim_id": "no-learning-results",
+      "kind": "missing_information",
+      "statement": "No nurse learning, workload or retention outcomes have been measured for this candidate pack.",
+      "citations": [],
+      "limitation": "Missing results remain unknown; no software test can fill this field."
+    }
+  ],
+  "glossary": [
+    {
+      "concept_id": "provenance",
+      "label": "Provenance",
+      "definition": "Recorded relationships between a resource, its inputs and production activities.",
+      "passage_ids": [
+        "prov-lineage"
+      ],
+      "basis": "source_linked_paraphrase"
+    },
+    {
+      "concept_id": "applicability",
+      "label": "Applicability",
+      "definition": "Fit between a source’s stated audience or conditions and the proposed use.",
+      "passage_ids": [
+        "openrn-audience",
+        "nist-scope"
+      ],
+      "basis": "project_working_definition"
+    },
+    {
+      "concept_id": "claim-support",
+      "label": "Claim support",
+      "definition": "Whether the actual source justifies the particular statement being made, not merely whether a citation resolves.",
+      "passage_ids": [
+        "prov-lineage"
+      ],
+      "basis": "project_working_definition"
+    },
+    {
+      "concept_id": "editorial-design",
+      "label": "Teaching design",
+      "definition": "The objective, activity and teaching format chosen by the author; not automatically validated by a cited source.",
+      "passage_ids": [],
+      "basis": "project_working_definition"
+    },
+    {
+      "concept_id": "review-status",
+      "label": "Review status",
+      "definition": "The actual recorded disposition on an identified resource version, distinct from the source’s own standing.",
+      "passage_ids": [],
+      "basis": "project_working_definition"
+    },
+    {
+      "concept_id": "uncertainty",
+      "label": "Uncertainty",
+      "definition": "What remains unsettled and which additional observation could change the decision.",
+      "passage_ids": [
+        "nist-scope"
+      ],
+      "basis": "project_working_definition"
+    }
+  ],
+  "ai_assistance": {
+    "used": true,
+    "method": "AI-assisted source curation and authored educational examples. Exact short quotations retain attribution. No live inference, learner data or model training is performed by the pack."
+  },
+  "limitations": [
+    "Candidate content for educator/preceptor review; audience fit and independent review remain pending.",
+    "Guidance, a technical standard and a publisher’s educational overview: none is evidence that this learning pack improves outcomes.",
+    "No learner/clinical outcomes or competence established; no validated assessment rubric or automatic decision score.",
+    "Rights observations concern only the selected text and stated uses, not whole-source bundling or model training.",
+    "The maintenance window is a proposed project reminder, not empirical shelf life or an active surveillance service.",
+    "Not admitted to the learner application; no change to MD-01 or its fixed source pack."
+  ]
+}
