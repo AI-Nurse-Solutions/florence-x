@@ -1,0 +1,107 @@
+name: learning-pack-review
+on:
+  pull_request:
+permissions:
+  contents: read
+jobs:
+  full-suite:
+    if: github.head_ref == 'review/mission-delivery-md02'
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    services:
+      postgres:
+        image: postgres:16
+        env: {POSTGRES_USER: florence_test, POSTGRES_PASSWORD: ephemeral_ci_only, POSTGRES_DB: florence_test}
+        ports: ['5432:5432']
+        options: >-
+          --health-cmd "pg_isready -U florence_test -d florence_test"
+          --health-interval 5s --health-timeout 5s --health-retries 10
+      redis:
+        image: redis:7
+        ports: ['6379:6379']
+        options: >-
+          --health-cmd "redis-cli ping"
+          --health-interval 5s --health-timeout 5s --health-retries 10
+    env:
+      FLORENCE_TEST_DATABASE_URL: postgresql+psycopg://florence_test:ephemeral_ci_only@localhost:5432/florence_test
+      FLORENCE_TEST_REDIS_URL: redis://localhost:6379/15
+      LANGCHAIN_TRACING_V2: 'false'
+      LANGSMITH_TRACING: 'false'
+    steps:
+      - uses: actions/checkout@v4
+        with: {persist-credentials: false}
+      - uses: actions/setup-python@v5
+        with: {python-version: '3.12'}
+      - uses: open-policy-agent/setup-opa@v2
+      - name: Install and record source identity
+        id: install
+        run: |
+          pip install -e packages/florence-core -e packages/florence-edena -e packages/florence-connectors -e packages/florence-model-router -e packages/florence-cli
+          pip install '.[api,dev]' 'ruff==0.16.6' 'playwright==1.57.0'
+          mkdir -p /tmp/md02-review
+          pip freeze > /tmp/md02-review/dependencies.txt
+          python --version > /tmp/md02-review/versions.txt
+          node --version >> /tmp/md02-review/versions.txt
+          ruff --version >> /tmp/md02-review/versions.txt
+          git rev-parse HEAD > /tmp/md02-review/tested-commit.txt
+          git archive --format=tar HEAD > /tmp/md02-review/source.tar
+          git ls-tree -r HEAD > /tmp/md02-review/source-tree.txt
+      - name: Full repository tests
+        if: ${{ !cancelled() && steps.install.outcome == 'success' }}
+        run: |
+          set -o pipefail
+          pytest -q -ra --junitxml=/tmp/md02-review/tests.xml 2>&1 | tee /tmp/md02-review/tests.txt
+      - name: New review tooling lint
+        if: ${{ !cancelled() && steps.install.outcome == 'success' }}
+        run: |
+          set -o pipefail
+          ruff check scripts/build_learning_pack_review.py tests/unit/test_learning_pack_review.py tests/browser/verify_learning_pack.py --output-format=concise 2>&1 | tee /tmp/md02-review/new-lint.txt
+      - name: Reproduce candidate and retained teaching-card build
+        if: ${{ !cancelled() && steps.install.outcome == 'success' }}
+        run: |
+          python scripts/build_learning_pack_review.py --output /tmp/md02-review/candidate
+          python scripts/build_teaching_card_workspace.py --output /tmp/md02-review/teaching-card
+          python scripts/build_learning_workspace.py --check
+          python - <<'PY'
+          import hashlib
+          from pathlib import Path
+          expected = {
+              'examples/learning_pack_md02/evidence-pack.json': 'f92f18306ea8f5b91207a6621e72c2d11427038903a6d455e1a862102049bbad',
+              'examples/learning_pack_md02/learning-design.json': 'e88fe7503bc77805cf903a4b733c7b3387fcdb5ce1768ed4dbfa6defdbef4d2a',
+              '/tmp/md02-review/candidate/MD02_Learning_Pack.html': '24d64052bd11e31cd3c20ae282d06b2a41c79cc6a389ad82fbb7a826c2fad8ad',
+              '/tmp/md02-review/teaching-card/walkthrough.html': '13c1c7eef5fbb96dee4661f930268585225ae6f3b7daf43262da6da648a23e75',
+          }
+          for name, digest in expected.items():
+              assert hashlib.sha256(Path(name).read_bytes()).hexdigest() == digest, name
+          Path('/tmp/md02-review/preservation.txt').write_text('Exact candidate and current teaching-card preview hashes match.\n')
+          PY
+      - name: Candidate and retained browser checks
+        if: ${{ !cancelled() && steps.install.outcome == 'success' }}
+        run: |
+          python -m playwright install --with-deps chromium
+          python tests/browser/verify_learning_pack.py /tmp/md02-review/candidate/MD02_Learning_Pack.html /tmp/md02-review/pack-browser
+          python tests/browser/verify_teaching_card.py /tmp/md02-review/teaching-card/walkthrough.html /tmp/md02-review/card-browser
+          python tests/browser/verify_unsaved_warning.py /tmp/md02-review/teaching-card/walkthrough.html /tmp/md02-review/warning-browser
+          python tests/browser/verify_mission_walkthrough.py /tmp/md02-review/teaching-card/walkthrough.html /tmp/md02-review/journey-browser
+          python tests/browser/verify_review_note_focus.py /tmp/md02-review/teaching-card/walkthrough.html /tmp/md02-review/focus-browser
+      - name: Retained projection and synthetic HTTP checks
+        if: ${{ !cancelled() && steps.install.outcome == 'success' }}
+        run: |
+          set -o pipefail
+          node tests/javascript/test_teaching_card.cjs | tee /tmp/md02-review/projection.txt
+          node tests/javascript/test_deliberation.cjs /tmp/md02-review/js-snapshots.json | tee /tmp/md02-review/transitions.txt
+          mkdir -p .tooling/bin
+          cp "$(command -v opa)" .tooling/bin/opa
+          python scripts/e2e_live.py 2>&1 | tee /tmp/md02-review/http.txt
+      - name: Repository lint remains blocking
+        if: ${{ !cancelled() && steps.install.outcome == 'success' }}
+        run: |
+          set -o pipefail
+          ruff check . --output-format=concise 2>&1 | tee /tmp/md02-review/lint.txt
+      - name: Preserve evidence including failures
+        if: ${{ !cancelled() && steps.install.outcome == 'success' }}
+        uses: actions/upload-artifact@v4
+        with:
+          name: md02-review-evidence
+          path: /tmp/md02-review
+          retention-days: 14
