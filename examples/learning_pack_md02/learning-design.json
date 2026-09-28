@@ -1,0 +1,248 @@
+{
+  "pack_id": "teaching-source-foundations",
+  "version": "0.1.0",
+  "evidence_sha256": "f92f18306ea8f5b91207a6621e72c2d11427038903a6d455e1a862102049bbad",
+  "state": "candidate_for_independent_review",
+  "audience": "Educators and preceptors reviewing nonclinical AI-literacy teaching material; proposed, not independently confirmed.",
+  "goal": "Build a one-page teaching card whose claims, limits, intended audience and source basis can be explained.",
+  "primary_pillar": "Knowledge",
+  "pillar_dependencies": [
+    "Judgment",
+    "Capability",
+    "Contribution"
+  ],
+  "could_weaken": "An attractive source pack could encourage borrowed authority, automatic distrust, extra review burden or mistaken claims of competence.",
+  "lessons": [
+    {
+      "id": "lesson.limits",
+      "title": "Say where the evidence stops",
+      "objective": "Explain one limitation before extending a claim.",
+      "passage_ids": [
+        "nist-scope"
+      ],
+      "teaching_point": "The quoted NIST guidance calls for documenting the boundaries of generalization. It does not validate this card.",
+      "activity": "Name a setting or learner group for which the supplied evidence does not establish performance.",
+      "teach_back": "What would you need to observe before extending that claim?",
+      "mapping_kind": "authored_instructional_design"
+    },
+    {
+      "id": "lesson.lineage",
+      "title": "Trace the work without mistaking the trace for truth",
+      "objective": "Distinguish a source trail from a justified conclusion.",
+      "passage_ids": [
+        "prov-lineage"
+      ],
+      "teaching_point": "The W3C passage describes relationships in provenance chains. A chain can identify inputs even when an interpretation is wrong.",
+      "activity": "Identify the source, the authored transformation and the resulting draft as distinct items.",
+      "teach_back": "Which part of that chain needs someone to examine the actual meaning?",
+      "mapping_kind": "authored_instructional_design"
+    },
+    {
+      "id": "lesson.audience",
+      "title": "Check whom the resource was designed for",
+      "objective": "State the intended audience and a transfer limitation.",
+      "passage_ids": [
+        "openrn-audience"
+      ],
+      "teaching_point": "Open RN names an entry-level curriculum context. Use that context as a question to examine, not a universal suitability badge.",
+      "activity": "Compare the source audience with the audience written on a proposed teaching card.",
+      "teach_back": "What would make the same card unsuitable for a different learner?",
+      "mapping_kind": "authored_instructional_design"
+    }
+  ],
+  "exercises": [
+    {
+      "id": "exercise.trace",
+      "title": "A bounded proposal worth agreeing with",
+      "kind": "supported_agreement",
+      "origin": "authored_synthetic_nonclinical",
+      "passage_ids": [
+        "nist-scope",
+        "prov-lineage"
+      ],
+      "prompt_before_reveal": "What information should stay with a teaching card so another person can examine it?",
+      "proposal": "Keep the source trail and a statement of the limits of the evidence with the draft. Do not call the draft approved merely because those records exist.",
+      "choices": [
+        "accept",
+        "revise",
+        "reject",
+        "withhold"
+      ],
+      "reviewer_rationale": "Agreement with this narrow proposal is defensible: it preserves inspectability and limitations without asserting effectiveness. Revision or withholding may also be defensible when justified by a missing requirement.",
+      "what_would_change_the_choice": "A broken source relation, missing limitation or proposed use outside the source’s scope.",
+      "teach_back": "Why can you agree with this proposal without claiming that the card is validated?",
+      "card_mapping": [
+        "learning_objective",
+        "source_context",
+        "limits",
+        "actual_review_status"
+      ],
+      "auto_score": false
+    },
+    {
+      "id": "exercise.scope",
+      "title": "A material omission in audience fit",
+      "kind": "material_omission",
+      "origin": "authored_synthetic_nonclinical",
+      "passage_ids": [
+        "openrn-audience"
+      ],
+      "prompt_before_reveal": "What audience and curriculum does the source actually describe?",
+      "proposal": "Because this textbook is available online, its material is suitable without further review for every nursing level and jurisdiction.",
+      "choices": [
+        "accept",
+        "revise",
+        "reject",
+        "withhold"
+      ],
+      "reviewer_rationale": "The proposal omits the stated entry-level Wisconsin curriculum context. A narrower statement or withholding broad endorsement is defensible. Online access alone supplies no universal applicability finding.",
+      "what_would_change_the_choice": "A review for the specified new audience and jurisdiction, including curriculum, source currency and omissions.",
+      "teach_back": "What precise qualification belongs on the card?",
+      "card_mapping": [
+        "audience",
+        "replacement_wording",
+        "source_context",
+        "limits"
+      ],
+      "auto_score": false
+    },
+    {
+      "id": "exercise.unknown",
+      "title": "When the comparative answer is genuinely missing",
+      "kind": "genuine_uncertainty",
+      "origin": "authored_synthetic_nonclinical",
+      "passage_ids": [
+        "nist-scope",
+        "openrn-audience"
+      ],
+      "prompt_before_reveal": "What evidence here compares a one-page card with a longer learning activity?",
+      "proposal": "Use the one-page card as the superior learning format for all learners; no comparison is needed.",
+      "choices": [
+        "accept",
+        "revise",
+        "reject",
+        "withhold"
+      ],
+      "reviewer_rationale": "These passages do not measure comparative learning outcomes. Withholding superiority is justified; a bounded, reviewed formative comparison can be proposed without promising a favorable result. A preference is not evidence of superiority.",
+      "what_would_change_the_choice": "Observed understanding, material omissions, accessibility and review burden in a relevant comparison.",
+      "teach_back": "What is unknown, and what small observation could reduce that uncertainty?",
+      "card_mapping": [
+        "reason",
+        "alternative",
+        "consequence",
+        "limits"
+      ],
+      "auto_score": false
+    }
+  ],
+  "rights": [
+    {
+      "source_id": "nist-ai-rmf-core",
+      "basis": "NIST Technical Series Publications terms",
+      "terms_url": "https://www.nist.gov/open/copyright-fair-use-and-licensing-statements-srd-data-software-and-technical-series-publications",
+      "terms_locator": "NIST Technical Series Publications; third-party exception and recommended citation",
+      "retrieval": "Selected public HTML inspected; no bulk crawler.",
+      "excerpt_redistribution": "Selected unmodified excerpt with citation and required courtesy statement.",
+      "adaptation": "Original commentary is separate; any changed NIST material must be identified and terms respected.",
+      "commercial_distribution": "Published NIST terms grant reprint/derivative rights for NIST-authored work; third-party content excluded. Release review still pending.",
+      "model_training": "Not assessed for this intended use; not performed or authorized by this pack.",
+      "disposition": "short_excerpt_candidate",
+      "conditions": [
+        "Retain attribution and source locator.",
+        "Do not imply endorsement.",
+        "Do not extend to third-party figures or SRD."
+      ],
+      "checked_at": "2026-09-11T22:08:22-07:00",
+      "reviewer_role": "development_agent_not_legal_counsel",
+      "conditions_satisfied_in_candidate": true
+    },
+    {
+      "source_id": "w3c-prov-o-2013",
+      "basis": "W3C Document License, linked 2023 version",
+      "terms_url": "https://www.w3.org/copyright/document-license-2023/",
+      "terms_locator": "License paragraphs on copies/portions, notices and derivatives",
+      "retrieval": "Selected public dated recommendation inspected; no bulk ingestion.",
+      "excerpt_redistribution": "Unmodified fragment with original URL, copyright notice and Recommendation status.",
+      "adaptation": "No modified technical specification. Commentary is separate. Broader derivative uses require the applicable permission/exception.",
+      "commercial_distribution": "Copy/distribute portions for any purpose under published notice conditions; not a blanket derivative license.",
+      "model_training": "Not assessed; not performed or authorized by this pack.",
+      "disposition": "short_excerpt_candidate",
+      "conditions": [
+        "Preserve original copyright, status and source URL.",
+        "Retain license URL and no-warranty/no-endorsement notice.",
+        "Do not use marks for product endorsement."
+      ],
+      "checked_at": "2026-09-11T22:08:22-07:00",
+      "reviewer_role": "development_agent_not_legal_counsel",
+      "conditions_satisfied_in_candidate": true
+    },
+    {
+      "source_id": "openrn-fundamentals-2e-overview",
+      "basis": "Page-specific CC BY 4.0 except where noted",
+      "terms_url": "https://wtcs.pressbooks.pub/nursingfundamentals/front-matter/introduction/",
+      "license_url": "https://creativecommons.org/licenses/by/4.0/",
+      "terms_locator": "Licensing/Terms of Use; Suggested Attribution Statement; License footer",
+      "retrieval": "Overview and book metadata inspected. The 1.8 chapter returned 403; not accessed by another route.",
+      "excerpt_redistribution": "Selected prose with attribution, license URL, source and change description.",
+      "adaptation": "CC BY permits adaptations with conditions. This fragment remains verbatim and additional teaching design is labeled.",
+      "commercial_distribution": "CC BY permits commercial reuse of covered prose subject to attribution and other terms; excepted third-party material excluded.",
+      "model_training": "Not assessed as a distinct use; no inference that the license itself prohibits it. Not performed or authorized by this pack.",
+      "disposition": "short_excerpt_candidate",
+      "conditions": [
+        "Credit editors, title, publisher and source.",
+        "Retain CC BY 4.0; indicate changes; no endorsement.",
+        "No extra restrictions on recipients’ underlying licensed rights."
+      ],
+      "checked_at": "2026-09-11T22:08:22-07:00",
+      "reviewer_role": "development_agent_not_legal_counsel",
+      "conditions_satisfied_in_candidate": true
+    }
+  ],
+  "review": {
+    "independent_status": "pending",
+    "reviewer": null,
+    "disposition": null,
+    "reviewed_evidence_sha256": null,
+    "actual_participants": 0,
+    "outcomes": null
+  },
+  "maintenance": {
+    "state": "owner_acceptance_pending",
+    "content_steward": null,
+    "rights_steward": null,
+    "independent_reviewer": null,
+    "proposed_review_due_at": "2026-12-10T22:08:22-08:00",
+    "review_window_basis": "Proposed 90-day project checkpoint and immediate review before use/redistribution; not an evidence-based shelf life.",
+    "triggers": [
+      "Changed source text/version or license terms",
+      "Changed audience, objective or claim",
+      "Material omission, accessibility or comprehension finding",
+      "Source withdrawal or missing attribution"
+    ],
+    "on_change": "Create a new version; preserve the old one and suspend its candidacy when relevant support is in doubt. Never copy an earlier approval to changed content.",
+    "surveillance_running": false
+  },
+  "exclusions": [
+    {
+      "source": "Open RN chapter 1.8",
+      "reason": "403 response; not examined or excerpted. Only accessible overview included."
+    },
+    {
+      "source": "Earlier research-abstract fixture",
+      "reason": "Not part of this new distributable candidate; full-methods and reuse scope not reviewed here. Prior application pack unchanged."
+    },
+    {
+      "source": "Private IoC/architecture documents",
+      "reason": "Design lineage only; no private passages or reference content copied into public assets."
+    }
+  ],
+  "application_admission": {
+    "state": "not_admitted",
+    "active_source_pack_changed": false,
+    "permissions_granted": false,
+    "training_authorized": false,
+    "saving_enabled": false
+  },
+  "review_protocol": "Existing docs/evaluation/SS07_FORMATIVE_KIT.md; use exact-version content review before participant use. This pack does not recruit or collect responses.",
+  "created_at": "2026-09-11T22:08:22-07:00"
+}
